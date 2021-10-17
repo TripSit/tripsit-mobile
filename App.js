@@ -133,9 +133,9 @@ function ChatScreen() {
   );
 }
 
-
-function FactsScreen({ navigation }) {
+function FactsScreen({ navigation, route }) {
   const [searchValue, setSearchValue] = React.useState("");
+  const [results, setResults] = React.useState({})
   return (
     <View style={styles.container}>
       <Text style={styles.text}>
@@ -151,18 +151,21 @@ function FactsScreen({ navigation }) {
           // value={searchValue}
           // onSubmitEditing={searchValue => Search({navigation, searchValue})}
           // onSubmitEditing={() => navigation.navigate('FactResults', {searchValue})}
-          onSubmitEditing={() => factSearchFunction({navigation, searchValue})}
+          // onSubmitEditing={() => factSearchFunction({navigation, searchValue})}
         />
         <TouchableOpacity 
-          // onPress={() => factSearchFunction({searchValue})}
           onPress={() => {
-            console.log("searchValue: " + searchValue)
+            // console.log("searchValue: " + searchValue)
             var factsheetUrl = "https://tripbot.tripsit.me/api/tripsit/getDrug?name=" + searchValue
             var factsheetUrlTest = "https://tripbot.tripsit.me/api/tripsit/getDrug?name=MDMA"
-            console.log(factsheetUrl)
-            navigation.navigate('FactResults')
+            // console.log(factsheetUrlTest)
+            fetch(factsheetUrlTest)
+              .then(response => response.json())
+              .then(response => {setResults({response})})
+              // .then(console.log(results))
+              // .then(response => {navigation.navigate('FactResults'), { response: "{response}",otherParam: "anything"}})
+              .then(() => navigation.navigate('FactResults', {omg: "test123123123"}))
           }}
-          // onPress={() => navigation.navigate('FactResults', {searchValue})}
           >
           <Text style={styles.searchButton}>
             Search
@@ -319,10 +322,31 @@ function factSearchFunction({ navigation, searchValue}) {
   // withNavigation('FactResults')
 }
 
-function FactsResultsScreen() {
+function FactsResultsScreen({ navigation, route }) {
+  const { omg } = route.params;
+  console.log(omg)
+  // const results = navigation.getParam('results');
+  // console.log(results)
+
+  // const { response, searchValue } = route.params
+  // const message = navigation.getParam('response')
+  // console.log("start FactsResultsScreen " + response )
   const [collapsed, setCollapsed] = React.useState(true);
   const [multipleSelect, setmultipleSelect] = React.useState(true);
   const [activeSections, setActiveSections] = React.useState([]);
+  const [CONTENT, setCONTENT] = React.useState([
+    { title: 'Aliases', content: "",},
+    { title: 'Summary', content: '',},
+    { title: 'Categories', content:'',},
+    { title: 'General Advice', content:'',},
+    { title: 'Dose Note', content:'',},
+    { title: 'Dosage', content:'',},
+    { title: 'Timing', content:'',},
+    { title: 'Aftereffects', content:'',},
+    { title: 'Combos', content:'',},
+    { title: 'Links', content:'',},
+    { title: 'Sources', content:'',},
+  ]);
 
   const toggleExpanded = () => {
     //Toggling the state of single Collapsible
@@ -361,53 +385,6 @@ function FactsResultsScreen() {
     //setting up a active section state
     setActiveSections(sections.includes(undefined) ? [] : sections);
   };
-
-    let [CONTENT, setCONTENT] = React.useState([
-    {
-      title: 'Aliases',
-      content: "",
-    },
-    {
-      title: 'Summary',
-      content: '',
-    },
-    {
-      title: 'Categories',
-      content:'',
-    },
-    {
-      title: 'General Advice',
-      content:'',
-    },
-    {
-      title: 'Dose Note',
-      content:'',
-    },
-    {
-      title: 'Dosage',
-      content:'',
-    },
-    {
-      title: 'Timing',
-      content:'',
-    },
-    {
-      title: 'Aftereffects',
-      content:'',
-    },
-    {
-      title: 'Combos',
-      content:'',
-    },
-    {
-      title: 'Links',
-      content:'',
-    },
-    {
-      title: 'Sources',
-      content:'',
-    },
-  ]);
 
   return (
     <View style={styles.container}>
@@ -451,7 +428,6 @@ function FactsResultsScreen() {
     </View>
   );
 }
-
 
 function ComboScreen() {
   return (
