@@ -59,7 +59,6 @@ function App() {
         <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
         <Stack.Screen name="Chat" component={ChatScreen}/>
         <Stack.Screen name="Facts" component={FactsScreen}/>
-        <Stack.Screen name="FactSearch" component={FactSearchScreen}/>
         <Stack.Screen name="Combos" component={ComboScreen}/>
         <Stack.Screen name="Wiki" component={WikiScreen}/>
         <Stack.Screen name="Contact" component={ContactScreen}/>
@@ -159,12 +158,13 @@ function FactsScreen({ navigation, route }) {
             var factsheetUrl = "https://tripbot.tripsit.me/api/tripsit/getDrug?name=" + searchValue
             var factsheetUrlTest = "https://tripbot.tripsit.me/api/tripsit/getDrug?name=MDMA"
             // console.log(factsheetUrlTest)
-            fetch(factsheetUrlTest)
-              .then(response => response.json())
-              .then(response => {setResults({response})})
-              // .then(console.log(results))
-              // .then(response => {navigation.navigate('FactResults'), { response: "{response}",otherParam: "anything"}})
-              .then(() => navigation.navigate('FactResults', {omg: "test123123123"}))
+            fetch(factsheetUrl)
+              .then((response) => response.json())
+              // // .then(response => {setResults({response})})
+              // .then(console.log("Response:"))
+              // .then(console.log(response))
+              .then((response) => navigation.navigate('FactResults', {results: response}))
+              // .then(() => navigation.navigate('FactResults', {results: "test123123123"}))
           }}
           >
           <Text style={styles.searchButton}>
@@ -176,176 +176,71 @@ function FactsScreen({ navigation, route }) {
   );
 }
 
-function FactSearchScreen(searchValue) {
-  // console.log(searchValue)
-  // const { searchValue } = route.params
-  // console.log("start getSubstanceInfo" + {searchValue})
-  // const nav = useNavigation()
-  // nav.navigate('FactResults')
-
-  // var factsheetUrl = "https://tripbot.tripsit.me/api/tripsit/getDrug?name=" + searchValue
-  var factsheetUrl = "https://tripbot.tripsit.me/api/tripsit/getDrug?name=MDMA"
-  console.log(factsheetUrl)
-
-  // var CONTENT = []
-  // let [CONTENT, setCONTENT] = React.useState([]);
-  // const [quote, setQuote] = React.useState('')
-  // let [CONTENT, setCONTENT] = React.useState([
-  //   {
-  //     title: 'Aliases',
-  //     content: "",
-  //   },
-  //   {
-  //     title: 'Summary',
-  //     content: '',
-  //   },
-  //   {
-  //     title: 'Categories',
-  //     content:'',
-  //   },
-  //   {
-  //     title: 'General Advice',
-  //     content:'',
-  //   },
-  //   {
-  //     title: 'Dose Note',
-  //     content:'',
-  //   },
-  //   {
-  //     title: 'Dosage',
-  //     content:'',
-  //   },
-  //   {
-  //     title: 'Timing',
-  //     content:'',
-  //   },
-  //   {
-  //     title: 'Aftereffects',
-  //     content:'',
-  //   },
-  //   {
-  //     title: 'Combos',
-  //     content:'',
-  //   },
-  //   {
-  //     title: 'Links',
-  //     content:'',
-  //   },
-  //   {
-  //     title: 'Sources',
-  //     content:'',
-  //   },
-  // ]);
-
-  // try {
-
-  //   // let response = await fetch(factsheetUrl);
-  //   // let json = await response.json();
-  //   console.log("starting fetch")
-  //   fetch(factsheetUrl)
-  //     .then(response => response.json())
-  //     .then(response => {
-  //       console.log(response.data[0].dose_note)
-  //       // setQuote(response.data[0].dose_note)
-  //       // setCONTENT(
-  //       //   [
-  //       //     {
-  //       //       title: 'Aliases',
-  //       //       content: response.data[0].dose_note,
-  //       //     },
-  //       //     {
-  //       //       title: 'Summary',
-  //       //       content: 'omg',
-  //       //     },
-  //       //     {
-  //       //       title: 'Categories',
-  //       //       content:'hello',
-  //       //     },
-  //       //     {
-  //       //       title: 'General Advice',
-  //       //       content:'',
-  //       //     },
-  //       //     {
-  //       //       title: 'Dose Note',
-  //       //       content:'',
-  //       //     },
-  //       //     {
-  //       //       title: 'Dosage',
-  //       //       content:'',
-  //       //     },
-  //       //     {
-  //       //       title: 'Timing',
-  //       //       content:'',
-  //       //     },
-  //       //     {
-  //       //       title: 'Aftereffects',
-  //       //       content:'',
-  //       //     },
-  //       //     {
-  //       //       title: 'Combos',
-  //       //       content:'',
-  //       //     },
-  //       //     {
-  //       //       title: 'Links',
-  //       //       content:'',
-  //       //     },
-  //       //     {
-  //       //       title: 'Sources',
-  //       //       content:'',
-  //       //     },
-  //       //   ]
-  //       // )
-  //     })
-  //     .then(navigation.navigate('FactResults'))
-  // } catch (error) {
-  //   console.error(error)
-  // }
-  return(
-    <View style={styles.container}>
-      <Text style={styles.text}>
-        Chat Screen
-      </Text>
-    </View>
-  )
-}
-
-function factSearchFunction({ navigation, searchValue}) {
-  const nav = useNavigation();
-  // const navi = 
-  console.log("searchValue: " + searchValue)
-  var factsheetUrl = "https://tripbot.tripsit.me/api/tripsit/getDrug?name=" + searchValue
-  var factsheetUrlTest = "https://tripbot.tripsit.me/api/tripsit/getDrug?name=MDMA"
-  console.log(factsheetUrl)
-  // FactsResultsScreen()
-  nav.navigate('FactResults')
-  // props.navigation.navigate('FactResults');
-  // withNavigation('FactResults')
-}
-
 function FactsResultsScreen({ navigation, route }) {
-  const { omg } = route.params;
-  console.log(omg)
-  // const results = navigation.getParam('results');
+  const { results } = route.params;
   // console.log(results)
+  // console.log(results.data[0].dose_note)
+  // console.log(results.data[0].aliases)
 
-  // const { response, searchValue } = route.params
-  // const message = navigation.getParam('response')
-  // console.log("start FactsResultsScreen " + response )
+  const summary = "Also known as: " + results.data[0].properties.aliases.join(", ") + "\n\n" +
+    results.data[0].properties.summary + "\n\n" +
+    results.data[0].properties["general-advice"] + "\n\n" +
+    results.data[0].dose_note + "\n\n" +
+    "Included in the following categories: " + results.data[0].properties.categories.join(", ") + "\n\n" +
+    "Detectible in drug tests for: " + results.data[0].properties.detection + "\n\n" +
+    "Marquis reagent will react: " + results.data[0].properties.marquis
+  
+  let dosage = results.data[0].dose_note + "\n\n" + 
+    results.data[0].properties["general-advice"] + "\n\n"
+  const dosage_types = Object.keys(results.data[0].formatted_dose)
+  dosage_types.forEach(doseType => {
+    console.log(doseType)
+    dosage += doseType + "\n"
+    const dosage_levels = Object.keys(results.data[0].formatted_dose[doseType])
+    dosage_levels.forEach(doseLevel => {
+      console.log(results.data[0].formatted_dose[doseType][doseLevel])
+      dosage += doseLevel + " - " + results.data[0].formatted_dose[doseType][doseLevel] + "\n" 
+    })
+    dosage += "\n\n"
+  })
+
+  let timings = "Onset: " + results.data[0].formatted_onset['value'] + " " + results.data[0].formatted_onset['_unit'] + "\n\n" +
+    "Duration: " + results.data[0].formatted_duration['value'] + " " + results.data[0].formatted_duration['_unit'] + "\n\n" +
+    "After effects: " + results.data[0].formatted_aftereffects['value'] + " " + results.data[0].formatted_aftereffects['_unit'] + "\n\n"
+
+  let combos = ""
+  const other_drugs = Object.keys(results.data[0].combos)
+  other_drugs.forEach(drugName => {
+    console.log(drugName)
+    combos += drugName + ": " + results.data[0].combos[drugName].status
+    if (results.data[0].combos[drugName].note) {
+      combos += "\n" + results.data[0].combos[drugName].note
+    }
+    combos += "\n\n"
+  })
+
+  let links = "wiki"
+  const link_types = Object.keys(results.data[0].links)
+  link_types.forEach(linkType => {
+    console.log(linkType)
+    links += linkType + "\n"
+    links += results.data[0].links[linkType]
+    links += "\n\n"
+  })
+
+  let sources = ""
+
+  links += sources
+
   const [collapsed, setCollapsed] = React.useState(true);
   const [multipleSelect, setmultipleSelect] = React.useState(true);
   const [activeSections, setActiveSections] = React.useState([]);
   const [CONTENT, setCONTENT] = React.useState([
-    { title: 'Aliases', content: "",},
-    { title: 'Summary', content: '',},
-    { title: 'Categories', content:'',},
-    { title: 'General Advice', content:'',},
-    { title: 'Dose Note', content:'',},
-    { title: 'Dosage', content:'',},
-    { title: 'Timing', content:'',},
-    { title: 'Aftereffects', content:'',},
-    { title: 'Combos', content:'',},
-    { title: 'Links', content:'',},
-    { title: 'Sources', content:'',},
+    { title: 'Summary', content: summary,},
+    { title: 'Dosage', content: dosage,},
+    { title: 'Timings', content: timings,},
+    { title: 'Combos', content: combos,},
+    { title: 'Links and sources', content: links,},
   ]);
 
   const toggleExpanded = () => {
