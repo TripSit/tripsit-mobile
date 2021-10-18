@@ -194,11 +194,9 @@ function FactsResultsScreen({ navigation, route }) {
     results.data[0].properties["general-advice"] + "\n\n"
   const dosage_types = Object.keys(results.data[0].formatted_dose)
   dosage_types.forEach(doseType => {
-    console.log(doseType)
     dosage += doseType + "\n"
     const dosage_levels = Object.keys(results.data[0].formatted_dose[doseType])
     dosage_levels.forEach(doseLevel => {
-      console.log(results.data[0].formatted_dose[doseType][doseLevel])
       dosage += doseLevel + " - " + results.data[0].formatted_dose[doseType][doseLevel] + "\n" 
     })
     dosage += "\n\n"
@@ -211,7 +209,6 @@ function FactsResultsScreen({ navigation, route }) {
   let combos = ""
   const other_drugs = Object.keys(results.data[0].combos)
   other_drugs.forEach(drugName => {
-    console.log(drugName)
     combos += drugName + ": " + results.data[0].combos[drugName].status
     if (results.data[0].combos[drugName].note) {
       combos += "\n" + results.data[0].combos[drugName].note
@@ -222,13 +219,16 @@ function FactsResultsScreen({ navigation, route }) {
   let links = "wiki"
   const link_types = Object.keys(results.data[0].links)
   link_types.forEach(linkType => {
-    console.log(linkType)
     links += linkType + "\n"
     links += results.data[0].links[linkType]
     links += "\n\n"
   })
 
-  let sources = ""
+  let sources = "\n\n"
+  results.data[0].sources._general.forEach(eachLink =>{
+    sources += eachLink + "\n"
+  })
+
 
   links += sources
 
@@ -284,19 +284,11 @@ function FactsResultsScreen({ navigation, route }) {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <TouchableOpacity onPress={toggleExpanded}>
-          <View style={styles.text}>
-            <Text style={styles.text}>Results</Text>
-            {/*Heading of Single Collapsible*/}
-          </View>
-          </TouchableOpacity>
-          <Collapsible collapsed={collapsed}>
-          <View>
-            <Text style={styles.text}>
-              You searched for:
-            </Text>
-          </View>
-          </Collapsible>
+        <View>
+          <Text style={styles.text}>
+            You searched for: {results.data[0].name}
+          </Text>
+        </View>
 
         <Accordion
           activeSections={activeSections}
