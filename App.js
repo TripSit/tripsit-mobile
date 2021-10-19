@@ -69,7 +69,6 @@ function App() {
         <Stack.Screen name="Settings" component={SettingsScreen}/>
         <Stack.Screen name="About" component={AboutScreen}/>
         <Stack.Screen name="FactResults" component={FactsResultsScreen}/>
-        <Stack.Screen name="ComboResults" component={ComboResultsScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -324,56 +323,64 @@ function FactsResultsScreen({ navigation, route }) {
 function ComboScreen({ navigation, route }) {
   const [drugA, setDrugA] = React.useState("");
   const [drugB, setDrugB] = React.useState("");
+  const [shouldShow, setShouldShow] = React.useState(false);
+  const [results, setResults] = React.useState({})
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Combo Screen</Text>
-      <TextInput
-        style={styles.input}
-        placeholder={"Substance A name"}
-        onChangeText={(value) => setDrugA(value)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder={"Substance B name"}
-        onChangeText={(value) => setDrugB(value)}
-      />
+      <View style={{flexDirection:"row"}}>
+        <TextInput
+          style={styles.input}
+          placeholder={"Substance A name"}
+          onChangeText={(value) => setDrugA(value)}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder={"Substance B name"}
+          onChangeText={(value) => setDrugB(value)}
+        />
+      </View>
       <TouchableOpacity 
         onPress={() => {
           var comboUrl = "https://tripbot.tripsit.me/api/tripsit/getInteraction?drugA=" + drugA + "&drugB=" + drugB
           var comboUrlTest = "https://tripbot.tripsit.me/api/tripsit/getInteraction?drugA=DXM&drugB=MDMA"
-          console.log(comboUrl)
+          // console.log(comboUrlTest)
           fetch(comboUrl)
             .then((response) => response.json())
-            .then((response) => navigation.navigate('ComboResults', {drugA: drugA, drugB: drugB, results: response}))
+            .then((response) => setResults(response.data[0].status))
+            .then(() => setShouldShow(true))
         }}>
         <Text style={styles.searchButton}>
           Search
         </Text>
       </TouchableOpacity>
-    </View>
-  );
-}
-
-function ComboResultsScreen({ navigation, route }) {
-  const { drugA, drugB, results } = route.params;
-  const output = results.data[0].status
-  console.log(drugA)
-  console.log(drugB)
-  console.log(output)
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Combo Results Screen</Text>
-      <Text style={styles.text}>{drugA} and {drugB} together is:</Text>
-      <Text style={styles.text}>{output}</Text>
+      {shouldShow ? (
+        <View style={styles.container}>
+          <Text style={styles.text}>{results}</Text>
+        </View>
+      ) : null}
     </View>
   );
 }
 
 function WikiScreen() {
+  const [shouldShow, setShouldShow] = React.useState(true);
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Wiki Screen</Text>
+      <Button
+        title="Hide/Show Component"
+        onPress={() => setShouldShow(!shouldShow)}
+      />
+      {shouldShow ? (
+        <Image
+          source={{
+            uri:
+              'https://raw.githubusercontent.com/AboutReact/sampleresource/master/old_logo.png',
+          }}
+          style={{width: 250, height: 250}}
+        />
+      ) : null}
     </View>
   );
 }
