@@ -36,6 +36,10 @@ import wiki_image from './assets/globe.png';
 import settings_image from './assets/gears.png';
 import contact_image from './assets/contact.png';
 import about_image from './assets/about.png';
+import facebook_image from './assets/facebook.png'
+import reddit_image from './assets/reddit.png'
+import twitter_image from './assets/twitter.png'
+import bitcoin_image from './assets/bitcoin.png'
 
 // https://docs.expo.dev/tutorial/
 
@@ -65,6 +69,7 @@ function App() {
         <Stack.Screen name="Settings" component={SettingsScreen}/>
         <Stack.Screen name="About" component={AboutScreen}/>
         <Stack.Screen name="FactResults" component={FactsResultsScreen}/>
+        <Stack.Screen name="ComboResults" component={ComboResultsScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -316,10 +321,51 @@ function FactsResultsScreen({ navigation, route }) {
   );
 }
 
-function ComboScreen() {
+function ComboScreen({ navigation, route }) {
+  const [drugA, setDrugA] = React.useState("");
+  const [drugB, setDrugB] = React.useState("");
+
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Combo Screen</Text>
+      <TextInput
+        style={styles.input}
+        placeholder={"Substance A name"}
+        onChangeText={(value) => setDrugA(value)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder={"Substance B name"}
+        onChangeText={(value) => setDrugB(value)}
+      />
+      <TouchableOpacity 
+        onPress={() => {
+          var comboUrl = "https://tripbot.tripsit.me/api/tripsit/getInteraction?drugA=" + drugA + "&drugB=" + drugB
+          var comboUrlTest = "https://tripbot.tripsit.me/api/tripsit/getInteraction?drugA=DXM&drugB=MDMA"
+          console.log(comboUrl)
+          fetch(comboUrl)
+            .then((response) => response.json())
+            .then((response) => navigation.navigate('ComboResults', {drugA: drugA, drugB: drugB, results: response}))
+        }}>
+        <Text style={styles.searchButton}>
+          Search
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+function ComboResultsScreen({ navigation, route }) {
+  const { drugA, drugB, results } = route.params;
+  const output = results.data[0].status
+  console.log(drugA)
+  console.log(drugB)
+  console.log(output)
+  return (
+    <View style={styles.container}>
+      <Text style={styles.text}>Combo Results Screen</Text>
+      <Text style={styles.text}>{drugA} and {drugB} together is:</Text>
+      <Text style={styles.text}>{output}</Text>
     </View>
   );
 }
@@ -350,9 +396,22 @@ function SettingsScreen() {
 
 function AboutScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>About Screen</Text>
-    </View>
+    <ScrollView>
+      <View style={styles.container}>
+        <Text style={styles.text}>About TripSit</Text>
+        <Text style={styles.text}>This app is created by TripSit, an organisation which helps to provide factual information about drugs and how to reduce the harms involved in using them. We also have an active IRC (internet relay chat) network where we provide tripsitting services, harm reduction advice, and general chat.\nhttp://www.tripsit.me/</Text>
+        <Text style={styles.text}>Disclaimer</Text>
+        <Text style={styles.text}>Although we have a team dedicated to keeping the information on this app up to date, it is not always possible to provide entirely accurate information on the safety level of drugs. The information here should be used as guidelines only, and it is important to do your own research from multiple sources before ingesting a substance. We also strongly advise using a testing kit and scales to ensure you are taking the correct dosage. These can both be bought online for reasonable prices.</Text>
+        <Text style={styles.text}>Support TripSit</Text>
+        <Text style={styles.text}>TripSit is a completely free service run by volunteers. If you wish to help out, feel free to join the IRC, follow and share our content on social media, or make a donation to keep the servers running.</Text>
+        <View style={{flexDirection:"row"}}>
+            <Image source={facebook_image} style={styles.icon} />
+            <Image source={reddit_image} style={styles.icon} />
+            <Image source={twitter_image} style={styles.icon} /> 
+            <Image source={bitcoin_image} style={styles.icon} /> 
+        </View>
+      </View>
+    </ScrollView>
   );
 }
 
