@@ -62,7 +62,7 @@ function App() {
       >
         <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
         <Stack.Screen name="Chat" component={ChatScreen}/>
-        <Stack.Screen name="Facts" component={FactsScreen}/>
+        <Stack.Screen name="Facts" component={FactsScreen2}/>
         <Stack.Screen name="Combos" component={ComboScreen}/>
         <Stack.Screen name="Wiki" component={WikiScreen}/>
         <Stack.Screen name="Contact" component={ContactScreen}/>
@@ -132,6 +132,175 @@ function ChatScreen() {
       <Text style={styles.text}>
         Chat Screen
       </Text>
+    </View>
+  );
+}
+
+function FactsScreen2({ navigation, route }) {
+  const [searchValue, setSearchValue] = React.useState("");
+  const [results, setResults] = React.useState({})
+  const [shouldShow, setShouldShow] = React.useState(false);
+  const [collapsed, setCollapsed] = React.useState(true);
+  const [multipleSelect, setmultipleSelect] = React.useState(true);
+  const [activeSections, setActiveSections] = React.useState([]);
+
+
+  const toggleExpanded = () => {
+    //Toggling the state of single Collapsible
+    setCollapsed(!collapsed);
+  };
+
+  const renderHeader = (section, _, isActive) => {
+    //Accordion Header view
+    return (
+      <Animatable.View
+        duration={400}
+        style={[styles.header, isActive ? styles.active : styles.inactive]}
+        transition="backgroundColor">
+        <Text style={styles.headerText}>{section.title}</Text>
+      </Animatable.View>
+    );
+  };
+
+  const renderContent = (section, _, isActive) => {
+    //Accordion Content view
+    return (
+      <Animatable.View
+        duration={400}
+        style={[styles.content, isActive ? styles.active : styles.inactive]}
+        transition="backgroundColor">
+        <Animatable.Text
+          animation={isActive ? 'bounceIn' : undefined}
+          style={{ textAlign: 'center'}}>
+          {section.content}
+        </Animatable.Text>
+      </Animatable.View>
+    );
+  };
+  
+  const setSections = (sections) => {
+    //setting up a active section state
+    setActiveSections(sections.includes(undefined) ? [] : sections);
+  };
+
+  const [CONTENT, setCONTENT] = React.useState([
+    { title: 'Summary', content: "summary",},
+    { title: 'Dosage', content: "dosage",},
+    { title: 'Timings', content: "timings",},
+    { title: 'Combos', content: "combos",},
+    { title: 'Links and sources', content: "links",},
+  ]);
+
+  return (
+    <View style={styles.container}>
+      <ScrollView>
+        <Text style={styles.text}>
+          TripSit's Factsheet Search
+        </Text>
+        <View style={{ flexDirection:"row",}}>
+          <TextInput
+            style={styles.input}
+            placeholder={"Substance name"}
+            onChangeText={(value) => setSearchValue(value)}
+          />
+          <TouchableOpacity 
+            onPress={() => {
+              var factsheetUrl = "https://tripbot.tripsit.me/api/tripsit/getDrug?name=" + searchValue
+              var factsheetUrlTest = "https://tripbot.tripsit.me/api/tripsit/getDrug?name=MDMA"
+              fetch(factsheetUrl)
+                .then((response) => response.json())
+                .then((response) => {
+                  setResults(response.data[0])
+                  // console.log(response.data[0].properties["general-advice"])
+                  // console.log(response)
+                  const summary = "Also known as: " + response.data[0].properties.aliases.join(", ") + "\n\n" +
+                  response.data[0].properties.summary + "\n\n" +
+                  response.data[0].properties["general-advice"] + "\n\n" +
+                  response.data[0].dose_note + "\n\n" +
+                  "Included in the following categories: " + response.data[0].properties.categories.join(", ") + "\n\n" +
+                  "Detectible in drug tests for: " + response.data[0].properties.detection + "\n\n" +
+                  "Marquis reagent will react: " + response.data[0].properties.marquis
+                
+                  let dosage = response.data[0].dose_note + "\n\n" + 
+                    response.data[0].properties["general-advice"] + "\n\n"
+                  const dosage_types = Object.keys(response.data[0].formatted_dose)
+                  dosage_types.forEach(doseType => {
+                    dosage += doseType + "\n"
+                    const dosage_levels = Object.keys(response.data[0].formatted_dose[doseType])
+                    dosage_levels.forEach(doseLevel => {
+                      dosage += doseLevel + " - " + response.data[0].formatted_dose[doseType][doseLevel] + "\n" 
+                    })
+                    dosage += "\n\n"
+                  })
+                
+                  let timings = "Onset: " + response.data[0].formatted_onset['value'] + " " + response.data[0].formatted_onset['_unit'] + "\n\n" +
+                    "Duration: " + response.data[0].formatted_duration['value'] + " " + response.data[0].formatted_duration['_unit'] + "\n\n" +
+                    "After effects: " + response.data[0].formatted_aftereffects['value'] + " " + response.data[0].formatted_aftereffects['_unit'] + "\n\n"
+                
+                  let combos = ""
+                  const other_drugs = Object.keys(response.data[0].combos)
+                  other_drugs.forEach(drugName => {
+                    combos += drugName + ": " + response.data[0].combos[drugName].status
+                    if (response.data[0].combos[drugName].note) {
+                      combos += "\n" + response.data[0].combos[drugName].note
+                    }
+                    combos += "\n\n"
+                  })
+                
+                  let links = "wiki"
+                  const link_types = Object.keys(response.data[0].links)
+                  link_types.forEach(linkType => {
+                    links += linkType + "\n"
+                    links += response.data[0].links[linkType]
+                    links += "\n\n"
+                  })
+                
+                  let sources = "\n\n"
+                  response.data[0].sources._general.forEach(eachLink =>{
+                    sources += eachLink + "\n"
+                  })
+                
+                  links += sources
+                  setCONTENT([
+                    { title: 'Summary', content: summary,},
+                    { title: 'Dosage', content: dosage,},
+                    { title: 'Timings', content: timings,},
+                    { title: 'Combos', content: combos,},
+                    { title: 'Links and sources', content: links,},
+                  ])
+                  setShouldShow(true)
+                })
+            }}
+            >
+            <Text style={styles.searchButton}>
+              Search
+            </Text>
+          </TouchableOpacity>
+        </View>
+        {shouldShow ? (
+          <Accordion
+          activeSections={activeSections}
+          //for any default active section
+          sections={CONTENT}
+          //title and content of accordion
+          touchableComponent={TouchableOpacity}
+          //which type of touchable component you want
+          //It can be the following Touchables
+          //TouchableHighlight, TouchableNativeFeedback
+          //TouchableOpacity , TouchableWithoutFeedback
+          expandMultiple={multipleSelect}
+          //Do you want to expand mutiple at a time or single at a time
+          renderHeader={renderHeader}
+          //Header Component(View) to render
+          renderContent={renderContent}
+          //Content Component(View) to render
+          duration={400}
+          //Duration for Collapse and expand
+          onChange={setSections}
+          //setting the state of active sections
+        />
+        ) : null}
+      </ScrollView>
     </View>
   );
 }
@@ -233,7 +402,6 @@ function FactsResultsScreen({ navigation, route }) {
     sources += eachLink + "\n"
   })
 
-
   links += sources
 
   const [collapsed, setCollapsed] = React.useState(true);
@@ -293,7 +461,6 @@ function FactsResultsScreen({ navigation, route }) {
             You searched for: {results.data[0].name}
           </Text>
         </View>
-
         <Accordion
           activeSections={activeSections}
           //for any default active section

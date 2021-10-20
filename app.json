@@ -28,6 +28,7 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "description": ""
+    "description": "An app for TripSit API",
+    "githubUrl": "https://github.com/TripSit/TripMobileExpo"
   }
 }
