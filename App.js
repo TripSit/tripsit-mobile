@@ -1,6 +1,6 @@
 import * as React from 'react';
 //React elements to use
-import { Alert, ScrollView, TextInput, Image, StyleSheet, Button, Text, View, TouchableOpacity } from 'react-native';
+import { Alert, ScrollView, Linking, TextInput, Image, StyleSheet, Button, Text, View, TouchableOpacity } from 'react-native';
 //Honestly idk, i think this is standard
 import { setStatusBarNetworkActivityIndicatorVisible, StatusBar } from 'expo-status-bar';
 //Both below are for navigation
@@ -16,7 +16,8 @@ import Collapsible from 'react-native-collapsible';
 import Accordion from 'react-native-collapsible/Accordion';
 //import for the animation of Collapse and Expand
 import * as Animatable from 'react-native-animatable';
-
+//import for opening the web browser on links
+import * as WebBrowser from 'expo-web-browser';
 
 // Images
 import logo from './assets/logo.jpg';
@@ -44,6 +45,10 @@ import bitcoin_image from './assets/bitcoin.png'
 // https://docs.expo.dev/tutorial/
 
 const Stack = createNativeStackNavigator();
+
+function handleOpenWithWebBrowser(url) {
+  WebBrowser.openBrowserAsync(url);
+};
 
 function App() {
   return (
@@ -82,7 +87,12 @@ function HomeScreen({ navigation }) {
 
       <View>
         <View style={{flexDirection:"row"}}>
-          <TouchableOpacity onPress={() => navigation.navigate('Chat')} style={styles.doubleButton}>
+          <TouchableOpacity 
+            onPress={() => {
+              handleOpenWithWebBrowser('https://chat.tripsit.me')
+            }} 
+            style={styles.doubleButton
+            }>
             <Image source={chat_image} style={styles.icon} /> 
             <Text style={styles.buttonText}>Chat</Text>
           </TouchableOpacity>
@@ -100,11 +110,20 @@ function HomeScreen({ navigation }) {
         </View>
 
         <View style={{flexDirection:"row"}}>
-          <TouchableOpacity onPress={() => navigation.navigate('Wiki')} style={styles.button}>
+          <TouchableOpacity 
+            onPress={() => {
+              handleOpenWithWebBrowser('https://wiki.tripsit.me')
+            }} 
+            style={styles.button
+            }>
             <Image source={wiki_image} style={styles.icon} /> 
             <Text style={styles.buttonText}>Wiki</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Contact')} style={styles.button}>
+          <TouchableOpacity 
+            onPress={() => {
+              navigation.navigate('Contact')
+            }} 
+            style={styles.button}>
             <Image source={contact_image} style={styles.icon} /> 
             <Text style={styles.buttonText}>Contact</Text>
           </TouchableOpacity>
@@ -569,9 +588,13 @@ function SettingsScreen() {
 }
 
 function AboutScreen() {
+
+  
   return (
     <ScrollView>
       <View style={styles.container}>
+        <View style={styles.container}>
+        </View>
         <Text style={styles.text}>About TripSit</Text>
         <Text style={styles.text}>This app is created by TripSit, an organisation which helps to provide factual information about drugs and how to reduce the harms involved in using them. We also have an active IRC (internet relay chat) network where we provide tripsitting services, harm reduction advice, and general chat.\nhttp://www.tripsit.me/</Text>
         <Text style={styles.text}>Disclaimer</Text>
@@ -579,10 +602,30 @@ function AboutScreen() {
         <Text style={styles.text}>Support TripSit</Text>
         <Text style={styles.text}>TripSit is a completely free service run by volunteers. If you wish to help out, feel free to join the IRC, follow and share our content on social media, or make a donation to keep the servers running.</Text>
         <View style={{flexDirection:"row"}}>
+          <TouchableOpacity 
+            onPress={() => {
+              handleOpenWithWebBrowser('https://expo.dev')
+            }}>
             <Image source={facebook_image} style={styles.icon} />
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => {
+              handleOpenWithWebBrowser('https://expo.dev')
+            }}>
             <Image source={reddit_image} style={styles.icon} />
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => {
+              handleOpenWithWebBrowser('https://expo.dev')
+            }}>
             <Image source={twitter_image} style={styles.icon} /> 
+          </TouchableOpacity>
+          <TouchableOpacity 
+            onPress={() => {
+              handleOpenWithWebBrowser('https://expo.dev')
+            }}>
             <Image source={bitcoin_image} style={styles.icon} /> 
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
