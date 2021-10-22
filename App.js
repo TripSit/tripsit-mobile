@@ -67,13 +67,12 @@ function App() {
       >
         <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
         <Stack.Screen name="Chat" component={ChatScreen}/>
-        <Stack.Screen name="Facts" component={FactsScreen2}/>
+        <Stack.Screen name="Facts" component={FactsScreen}/>
         <Stack.Screen name="Combos" component={ComboScreen}/>
         <Stack.Screen name="Wiki" component={WikiScreen}/>
         <Stack.Screen name="Contact" component={ContactScreen}/>
         <Stack.Screen name="Settings" component={SettingsScreen}/>
         <Stack.Screen name="About" component={AboutScreen}/>
-        <Stack.Screen name="FactResults" component={FactsResultsScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -155,7 +154,7 @@ function ChatScreen() {
   );
 }
 
-function FactsScreen2({ navigation, route }) {
+function FactsScreen({ navigation, route }) {
   const [searchValue, setSearchValue] = React.useState("");
   const [results, setResults] = React.useState({})
   const [shouldShow, setShouldShow] = React.useState(false);
@@ -319,188 +318,6 @@ function FactsScreen2({ navigation, route }) {
           //setting the state of active sections
         />
         ) : null}
-      </ScrollView>
-    </View>
-  );
-}
-
-function FactsScreen({ navigation, route }) {
-  const [searchValue, setSearchValue] = React.useState("");
-  const [results, setResults] = React.useState({})
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>
-        TripSit's Factsheet Search
-      </Text>
-      <View style={{
-        flexDirection:"row", 
-      }}>
-        <TextInput
-          style={styles.input}
-          placeholder={"Substance name"}
-          onChangeText={(value) => setSearchValue(value)}
-          // value={searchValue}
-          // onSubmitEditing={searchValue => Search({navigation, searchValue})}
-          // onSubmitEditing={() => navigation.navigate('FactResults', {searchValue})}
-          // onSubmitEditing={() => factSearchFunction({navigation, searchValue})}
-        />
-        <TouchableOpacity 
-          onPress={() => {
-            // console.log("searchValue: " + searchValue)
-            var factsheetUrl = "https://tripbot.tripsit.me/api/tripsit/getDrug?name=" + searchValue
-            var factsheetUrlTest = "https://tripbot.tripsit.me/api/tripsit/getDrug?name=MDMA"
-            // console.log(factsheetUrlTest)
-            fetch(factsheetUrl)
-              .then((response) => response.json())
-              // // .then(response => {setResults({response})})
-              // .then(console.log("Response:"))
-              // .then(console.log(response))
-              .then((response) => navigation.navigate('FactResults', {results: response}))
-              // .then(() => navigation.navigate('FactResults', {results: "test123123123"}))
-          }}
-          >
-          <Text style={styles.searchButton}>
-            Search
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
-
-function FactsResultsScreen({ navigation, route }) {
-  const { results } = route.params;
-  // console.log(results)
-  // console.log(results.data[0].dose_note)
-  // console.log(results.data[0].aliases)
-
-  const summary = "Also known as: " + results.data[0].properties.aliases.join(", ") + "\n\n" +
-    results.data[0].properties.summary + "\n\n" +
-    results.data[0].properties["general-advice"] + "\n\n" +
-    results.data[0].dose_note + "\n\n" +
-    "Included in the following categories: " + results.data[0].properties.categories.join(", ") + "\n\n" +
-    "Detectible in drug tests for: " + results.data[0].properties.detection + "\n\n" +
-    "Marquis reagent will react: " + results.data[0].properties.marquis
-  
-  let dosage = results.data[0].dose_note + "\n\n" + 
-    results.data[0].properties["general-advice"] + "\n\n"
-  const dosage_types = Object.keys(results.data[0].formatted_dose)
-  dosage_types.forEach(doseType => {
-    dosage += doseType + "\n"
-    const dosage_levels = Object.keys(results.data[0].formatted_dose[doseType])
-    dosage_levels.forEach(doseLevel => {
-      dosage += doseLevel + " - " + results.data[0].formatted_dose[doseType][doseLevel] + "\n" 
-    })
-    dosage += "\n\n"
-  })
-
-  let timings = "Onset: " + results.data[0].formatted_onset['value'] + " " + results.data[0].formatted_onset['_unit'] + "\n\n" +
-    "Duration: " + results.data[0].formatted_duration['value'] + " " + results.data[0].formatted_duration['_unit'] + "\n\n" +
-    "After effects: " + results.data[0].formatted_aftereffects['value'] + " " + results.data[0].formatted_aftereffects['_unit'] + "\n\n"
-
-  let combos = ""
-  const other_drugs = Object.keys(results.data[0].combos)
-  other_drugs.forEach(drugName => {
-    combos += drugName + ": " + results.data[0].combos[drugName].status
-    if (results.data[0].combos[drugName].note) {
-      combos += "\n" + results.data[0].combos[drugName].note
-    }
-    combos += "\n\n"
-  })
-
-  let links = "wiki"
-  const link_types = Object.keys(results.data[0].links)
-  link_types.forEach(linkType => {
-    links += linkType + "\n"
-    links += results.data[0].links[linkType]
-    links += "\n\n"
-  })
-
-  let sources = "\n\n"
-  results.data[0].sources._general.forEach(eachLink =>{
-    sources += eachLink + "\n"
-  })
-
-  links += sources
-
-  const [collapsed, setCollapsed] = React.useState(true);
-  const [multipleSelect, setmultipleSelect] = React.useState(true);
-  const [activeSections, setActiveSections] = React.useState([]);
-  const [CONTENT, setCONTENT] = React.useState([
-    { title: 'Summary', content: summary,},
-    { title: 'Dosage', content: dosage,},
-    { title: 'Timings', content: timings,},
-    { title: 'Combos', content: combos,},
-    { title: 'Links and sources', content: links,},
-  ]);
-
-  const toggleExpanded = () => {
-    //Toggling the state of single Collapsible
-    setCollapsed(!collapsed);
-  };
-
-  const renderHeader = (section, _, isActive) => {
-    //Accordion Header view
-    return (
-      <Animatable.View
-        duration={400}
-        style={[styles.header, isActive ? styles.active : styles.inactive]}
-        transition="backgroundColor">
-        <Text style={styles.headerText}>{section.title}</Text>
-      </Animatable.View>
-    );
-  };
-
-  const renderContent = (section, _, isActive) => {
-    //Accordion Content view
-    return (
-      <Animatable.View
-        duration={400}
-        style={[styles.content, isActive ? styles.active : styles.inactive]}
-        transition="backgroundColor">
-        <Animatable.Text
-          animation={isActive ? 'bounceIn' : undefined}
-          style={{ textAlign: 'center'}}>
-          {section.content}
-        </Animatable.Text>
-      </Animatable.View>
-    );
-  };
-  
-  const setSections = (sections) => {
-    //setting up a active section state
-    setActiveSections(sections.includes(undefined) ? [] : sections);
-  };
-
-  return (
-    <View style={styles.container}>
-      <ScrollView>
-        <View>
-          <Text style={styles.text}>
-            You searched for: {results.data[0].name}
-          </Text>
-        </View>
-        <Accordion
-          activeSections={activeSections}
-          //for any default active section
-          sections={CONTENT}
-          //title and content of accordion
-          touchableComponent={TouchableOpacity}
-          //which type of touchable component you want
-          //It can be the following Touchables
-          //TouchableHighlight, TouchableNativeFeedback
-          //TouchableOpacity , TouchableWithoutFeedback
-          expandMultiple={multipleSelect}
-          //Do you want to expand mutiple at a time or single at a time
-          renderHeader={renderHeader}
-          //Header Component(View) to render
-          renderContent={renderContent}
-          //Content Component(View) to render
-          duration={400}
-          //Duration for Collapse and expand
-          onChange={setSections}
-          //setting the state of active sections
-        />
       </ScrollView>
     </View>
   );
