@@ -3,35 +3,20 @@ import * as React from 'react';
 import {
   ScrollView, TextInput, Image, StyleSheet, Text, View, TouchableOpacity,
 } from 'react-native';
-// Honestly idk, i think this is standard
+// This controls the bar at the top of the phone that diplays time, battery, etc
 import { StatusBar } from 'expo-status-bar';
 // Both below are for navigation
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// I thought i needed this for navigation, probably not needed anymore
-// import { useNavigation } from '@react-navigation/native';
-// import { withNavigation } from '@react-navigation/native';
-
-// import for the collapsible/Expandable view
-// import Collapsible from 'react-native-collapsible';
-// import for the Accordion view
+// For the collapseable view on the Facts page
 import Accordion from 'react-native-collapsible/Accordion';
-// import for the animation of Collapse and Expand
+// For the animation of Collapse and Expand on the accordian
 import * as Animatable from 'react-native-animatable';
-// import for opening the web browser on links
+// For opening the web browser on links
 import * as WebBrowser from 'expo-web-browser';
 
 // Images
 import logo from './assets/logo.jpg';
-// import Tripsit_image from './assets/trippy_ts.svg';
-// import Chat_image from './assets/trippy_chat.svg';
-// import Factsheets_image from './assets/trippy_document.svg';
-// import Combinations_image from './assets/trippy_flasks.svg';
-// import Wiki_image from './assets/trippy_globe.svg';
-// import Settings_image from './assets/trippy_gears.svg';
-// import Contact_image from './assets/trippy_contact.svg';
-// import aboutImage from './assets/trippy_about.svg';
-// import tripsitImage from './assets/document.png';
 import chatImage from './assets/chat.png';
 import factsheetsImage from './assets/document.png';
 import combinationsImage from './assets/flasks.png';
@@ -44,18 +29,12 @@ import redditImage from './assets/reddit.png';
 import twitterImage from './assets/twitter.png';
 import bitcointImage from './assets/bitcoin.png';
 
-// https://docs.expo.dev/tutorial/
-
-const Stack = createNativeStackNavigator();
-
-function handleOpenWithWebBrowser(url) {
-  WebBrowser.openBrowserAsync(url);
-}
-
 function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator
+        // These settings control the navigation bar
+        // By default this bar does not appear on the homepage
         screenOptions={{
           headerStyle: {
             backgroundColor: '#000',
@@ -67,11 +46,11 @@ function App() {
           headerTitleAlign: 'center',
         }}
       >
+        {/* Every screen the user will see must be defined here first */}
+        {/* Then use the navigation module and touchableOpacity  */}
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Chat" component={ChatScreen} />
         <Stack.Screen name="TripSit's Factsheet Search" component={FactsScreen} />
-        <Stack.Screen name="Combos" component={ComboScreen} />
-        <Stack.Screen name="Wiki" component={WikiScreen} />
+        <Stack.Screen name="TripSit's Combo Search" component={ComboScreen} />
         <Stack.Screen name="Contact" component={ContactScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
@@ -81,9 +60,11 @@ function App() {
 }
 
 function HomeScreen({ navigation }) {
+  // Set the display of the status bar to false
   const [displayStatusBar] = React.useState(false);
   return (
     <View style={styles.container}>
+      {/* StatusBar is hidden on this page, which hides it on all other pages */}
       <StatusBar hidden={displayStatusBar} />
       <Image source={logo} style={styles.logo} />
       <View>
@@ -104,7 +85,7 @@ function HomeScreen({ navigation }) {
             <Image source={factsheetsImage} style={styles.icon} />
             <Text style={styles.buttonText}>Facts</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('Combos')} style={styles.button}>
+          <TouchableOpacity onPress={() => navigation.navigate('TripSit\'s Combo Search')} style={styles.button}>
             <Image source={combinationsImage} style={styles.icon} />
             <Text style={styles.buttonText}>Combos</Text>
           </TouchableOpacity>
@@ -146,58 +127,24 @@ function HomeScreen({ navigation }) {
   );
 }
 
-function ChatScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>
-        Chat Screen
-      </Text>
-    </View>
-  );
-}
-
 function FactsScreen() {
+  // Value that you're searching for
   const [searchValue, setSearchValue] = React.useState('');
-  // const [results, setResults] = React.useState({});
+  // Controls the bottom section of the page that displays info
+  // Only activates when you tap "Search"
   const [shouldShow, setShouldShow] = React.useState(false);
-  // const [collapsed, setCollapsed] = React.useState(true);
+  // Allow the user to open multiple sections
   const [multipleSelect] = React.useState(true);
+  // Creates a blank array for the active sessions
   const [activeSections, setActiveSections] = React.useState([]);
 
-  // const toggleExpanded = () => {
-  //   // Toggling the state of single Collapsible
-  //   setCollapsed(!collapsed);
-  // };
-
-  const renderHeader = (section, _, isActive) => (
-    <Animatable.View
-      duration={400}
-      style={[styles.header, isActive ? styles.active : styles.inactive]}
-      transition="backgroundColor"
-    >
-      <Text style={styles.headerText}>{section.title}</Text>
-    </Animatable.View>
-  );
-  const renderContent = (section, _, isActive) => (
-    <Animatable.View
-      duration={400}
-      style={[styles.content, isActive ? styles.active : styles.inactive]}
-      transition="backgroundColor"
-    >
-      <Animatable.Text
-        animation={isActive ? 'bounceIn' : undefined}
-        style={styles.center}
-      >
-        {section.content}
-      </Animatable.Text>
-    </Animatable.View>
-  );
   const setSections = (sections) => {
-    // setting up a active section state
+    // Sets the active sessions
     setActiveSections(sections.includes(undefined) ? [] : sections);
   };
 
   const [CONTENT, setCONTENT] = React.useState([
+    // Create the scaffolding
     { title: 'Summary', content: 'summary' },
     { title: 'Dosage', content: 'dosage' },
     { title: 'Timings', content: 'timings' },
@@ -207,107 +154,123 @@ function FactsScreen() {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <View style={styles.row}>
-          <TextInput
-            style={styles.input}
-            placeholder="Substance name"
-            onChangeText={(value) => setSearchValue(value)}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              const factsheetUrl = `https://tripbot.tripsit.me/api/tripsit/getDrug?name=${searchValue}`;
-              // const factsheetUrlTest = 'https://tripbot.tripsit.me/api/tripsit/getDrug?name=MDMA';
-              fetch(factsheetUrl)
-                .then((response) => response.json())
-                .then((response) => {
-                  // setResults(response.data[0]);
-                  // console.log(response.data[0].properties["general-advice"])
-                  // console.log(response)
-                  const summary = `Also known as: ${response.data[0].properties.aliases.join(', ')}\n\n${
-                    response.data[0].properties.summary}\n\n${
-                    response.data[0].properties['general-advice']}\n\n${
-                    response.data[0].dose_note}\n\n`
-                    + `Included in the following categories: ${response.data[0].properties.categories.join(', ')}\n\n`
-                    + `Detectible in drug tests for: ${response.data[0].properties.detection}\n\n`
-                    + `Marquis reagent will react: ${response.data[0].properties.marquis}`;
+      <View style={styles.row}>
+        <TextInput
+          style={styles.input}
+          placeholder="Substance name"
+          onChangeText={(value) => setSearchValue(value)}
+        />
+        <TouchableOpacity
+          style={styles.searchButton}
+          onPress={() => {
+            const factsheetUrl = `https://tripbot.tripsit.me/api/tripsit/getDrug?name=${searchValue}`;
+            // const factsheetUrlTest = 'https://tripbot.tripsit.me/api/tripsit/getDrug?name=MDMA';
+            fetch(factsheetUrl)
+              .then((response) => response.json())
+              .then((response) => {
+                // Create the different text sections from the response
+                // We process the data here after the promise is complete
+                // After the data is built we display/replace the CONTENT
 
-                  let dosage = `${response.data[0].dose_note}\n\n${
-                    response.data[0].properties['general-advice']}\n\n`;
-                  const dosageTypes = Object.keys(response.data[0].formatted_dose);
-                  dosageTypes.forEach((doseType) => {
-                    dosage += `${doseType}\n`;
-                    const dosageLevels = Object.keys(response.data[0].formatted_dose[doseType]);
-                    dosageLevels.forEach((doseLevel) => {
-                      dosage += `${doseLevel} - ${response.data[0].formatted_dose[doseType][doseLevel]}\n`;
-                    });
-                    dosage += '\n\n';
+                // TODO: Make these conditional based on if there's value.
+                // EG: If the "dose_note" doesn't exist, don't display "unknown"
+                const aliases = `Also known as: ${response.data[0].properties.aliases.join(', ')}`;
+                const summaryInfo = `\n\n${response.data[0].properties.summary}`;
+                const generalAdvice = `\n\n${response.data[0].properties['general-advice']}`;
+                const doseNote = `\n\n${response.data[0].dose_note}`;
+                const categories = `\n\nIncluded in the following categories: ${response.data[0].properties.categories.join(', ')}`;
+                const detection = `\n\nDetectible in drug tests for: ${response.data[0].properties.detection}`;
+                const reagent = `\n\nMarquis reagent will react: ${response.data[0].properties.marquis}`;
+
+                const summary = aliases
+                  + summaryInfo
+                  + generalAdvice
+                  + doseNote
+                  + categories
+                  + detection
+                  + reagent;
+
+                let dosage = '';
+                const dosageTypes = Object.keys(response.data[0].formatted_dose);
+                dosageTypes.forEach((doseType) => {
+                  dosage += `${doseType}\n`;
+                  const dosageLevels = Object.keys(response.data[0].formatted_dose[doseType]);
+                  dosageLevels.forEach((doseLevel) => {
+                    dosage += `${doseLevel} - ${response.data[0].formatted_dose[doseType][doseLevel]}\n`;
                   });
-
-                  const timings = `Onset: ${response.data[0].formatted_onset.value} ${response.data[0].formatted_onset._unit}\n\n`
-                    + `Duration: ${response.data[0].formatted_duration.value} ${response.data[0].formatted_duration._unit}\n\n`
-                    + `After effects: ${response.data[0].formatted_aftereffects.value} ${response.data[0].formatted_aftereffects._unit}\n\n`;
-
-                  let combos = '';
-                  const otherDrugs = Object.keys(response.data[0].combos);
-                  otherDrugs.forEach((drugName) => {
-                    combos += `${drugName}: ${response.data[0].combos[drugName].status}`;
-                    if (response.data[0].combos[drugName].note) {
-                      combos += `\n${response.data[0].combos[drugName].note}`;
-                    }
-                    combos += '\n\n';
-                  });
-
-                  let links = '';
-                  const linkTypes = Object.keys(response.data[0].links);
-                  linkTypes.forEach((linkType) => {
-                    links += `${linkType}\n`;
-                    links += response.data[0].links[linkType];
-                    links += '\n\n';
-                  });
-
-                  let sources = '\n\n';
-                  response.data[0].sources._general.forEach((eachLink) => {
-                    sources += `${eachLink}\n`;
-                  });
-
-                  links += sources;
-                  setCONTENT([
-                    { title: 'Summary', content: summary },
-                    { title: 'Dosage', content: dosage },
-                    { title: 'Timings', content: timings },
-                    { title: 'Combos', content: combos },
-                    { title: 'Links and sources', content: links },
-                  ]);
-                  setShouldShow(true);
+                  dosage += '\n\n';
                 });
-            }}
-          >
-            <Text style={styles.searchButton}>
-              Search
-            </Text>
-          </TouchableOpacity>
-        </View>
+
+                const timings = `Onset: ${response.data[0].formatted_onset.value} ${response.data[0].formatted_onset._unit}\n\n`
+                  + `Duration: ${response.data[0].formatted_duration.value} ${response.data[0].formatted_duration._unit}\n\n`
+                  + `After effects: ${response.data[0].formatted_aftereffects.value} ${response.data[0].formatted_aftereffects._unit}\n\n`;
+
+                let combos = '';
+                const otherDrugs = Object.keys(response.data[0].combos);
+                otherDrugs.forEach((drugName) => {
+                  combos += `${drugName}: ${response.data[0].combos[drugName].status}`;
+                  if (response.data[0].combos[drugName].note) {
+                    combos += `\n${response.data[0].combos[drugName].note}`;
+                  }
+                  combos += '\n\n';
+                });
+
+                let links = '';
+                // TODO: Make these clickable
+                const linkTypes = Object.keys(response.data[0].links);
+                linkTypes.forEach((linkType) => {
+                  links += `${linkType}\n`;
+                  links += response.data[0].links[linkType];
+                  links += '\n\n';
+                });
+
+                let sources = '\n\n';
+                response.data[0].sources._general.forEach((eachLink) => {
+                  sources += `${eachLink}\n`;
+                });
+
+                links += sources;
+
+                // Update the CONTENT being displayed
+                setCONTENT([
+                  { title: 'Summary', content: summary },
+                  { title: 'Dosage', content: dosage },
+                  { title: 'Timings', content: timings },
+                  { title: 'Combos', content: combos },
+                  { title: 'Links and sources', content: links },
+                ]);
+                // Finally, display the bottom section
+                setShouldShow(true);
+              });
+          }}
+        >
+          <Text style={styles.buttonText}>
+            Search
+          </Text>
+        </TouchableOpacity>
+      </View>
+      <ScrollView>
         {shouldShow ? (
           <Accordion
-            activeSections={activeSections}
-          // for any default active section
-            sections={CONTENT}
-          // title and content of accordion
+            // Define how you want to interact with the accordian
+            // It can be the following Touchables
+            // TouchableHighlight, TouchableNativeFeedback
+            // TouchableOpacity , TouchableWithoutFeedback
             touchableComponent={TouchableOpacity}
-          // which type of touchable component you want
-          // It can be the following Touchables
-          // TouchableHighlight, TouchableNativeFeedback
-          // TouchableOpacity , TouchableWithoutFeedback
-            expandMultiple={multipleSelect}
-          // Do you want to expand mutiple at a time or single at a time
-            renderHeader={renderHeader}
-          // Header Component(View) to render
-            renderContent={renderContent}
-          // Content Component(View) to render
-            duration={400}
-          // Duration for Collapse and expand
+            // Title of sections and the 'content that will be displayed
+            sections={CONTENT}
+            // Get a list of currenly open sections, starts at []
+            activeSections={activeSections}
+            // When you interact, it adds that section to the activeSections list
             onChange={setSections}
+            // Do you want to expand multiple sections at the same time? True
+            expandMultiple={multipleSelect}
+            // Header Component(View) to render
+            renderHeader={renderHeader}
+            // Content Component(View) to render
+            renderContent={renderContent}
+            // How quickly the sections expand in ms. 0 for instant
+            duration={400}
           />
         ) : null}
       </ScrollView>
@@ -316,9 +279,12 @@ function FactsScreen() {
 }
 
 function ComboScreen() {
+  // Define objects to hold search data
   const [drugA, setDrugA] = React.useState('');
   const [drugB, setDrugB] = React.useState('');
+  // Much like Factsheets, the results only display after you search
   const [shouldShow, setShouldShow] = React.useState(false);
+  // Define object to store results
   const [results, setResults] = React.useState({});
 
   return (
@@ -336,33 +302,25 @@ function ComboScreen() {
         />
       </View>
       <TouchableOpacity
+        style={styles.searchButton}
         onPress={() => {
           const comboUrl = `https://tripbot.tripsit.me/api/tripsit/getInteraction?drugA=${drugA}&drugB=${drugB}`;
           // const comboUrlTest = 'https://tripbot.tripsit.me/api/tripsit/getInteraction?drugA=DXM&drugB=MDMA';
-          // console.log(comboUrlTest)
           fetch(comboUrl)
             .then((response) => response.json())
             .then((response) => setResults(response.data[0].status))
             .then(() => setShouldShow(true));
         }}
       >
-        <Text style={styles.searchButton}>
+        <Text style={styles.buttonText}>
           Search
         </Text>
       </TouchableOpacity>
       {shouldShow ? (
         <View style={styles.container}>
-          <Text style={styles.text}>{results}</Text>
+          <Text style={styles.buttonText}>{results}</Text>
         </View>
       ) : null}
-    </View>
-  );
-}
-
-function WikiScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Wiki Screen</Text>
     </View>
   );
 }
@@ -432,14 +390,17 @@ function AboutScreen() {
   );
 }
 
-const colorBlack = '#fff';
-const colorWhite = '#000';
-const colorPurple = '#4B0082';
+const color = {
+  black: '#000000',
+  red: '#FF0000',
+  green: '#00FF00',
+  blue: '#0000FF',
+  white: '#FFFFFF',
+  purple: '#4B0082',
+};
 
 const styles = StyleSheet.create({
-  center: {
-    textAlign: 'center',
-  },
+
   row: {
     flexDirection: 'row',
   },
@@ -448,11 +409,11 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
-    backgroundColor: colorBlack,
+    backgroundColor: color.white,
   },
   container: {
     flex: 1,
-    backgroundColor: colorWhite,
+    backgroundColor: color.black,
     alignItems: 'center',
   },
   logo: {
@@ -461,27 +422,25 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   button: {
-    // backgroundColor: 'blue',
     width: '50%',
     padding: 20,
     borderRadius: 5,
   },
   searchButton: {
-    backgroundColor: colorPurple,
-    // width: '50%',
-    // height: 40,
-    padding: 15,
+    backgroundColor: color.purple,
+    padding: 20,
     borderRadius: 5,
+    height: 10,
+    justifyContent: 'space-around'
   },
   doubleButton: {
-    // backgroundColor: 'blue',
     width: '100%',
     padding: 20,
     borderRadius: 5,
   },
   buttonText: {
     fontSize: 20,
-    color: colorBlack,
+    color: color.white,
     alignSelf: 'center',
   },
   icon: {
@@ -490,32 +449,63 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   text: {
-    fontSize: 20,
-    color: colorBlack,
-    alignSelf: 'center',
+    fontSize: 16,
+    color: color.white,
   },
   header: {
-    backgroundColor: colorBlack,
+    backgroundColor: color.purple,
     padding: 10,
   },
   headerText: {
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '500',
-    color: colorWhite,
+    color: color.white,
   },
   content: {
     padding: 20,
-    backgroundColor: colorBlack,
   },
   active: {
-    backgroundColor: colorWhite,
-    color: colorBlack
+    backgroundColor: color.black,
   },
   inactive: {
-    backgroundColor: colorWhite,
-    color: colorBlack
+    backgroundColor: color.black,
   },
 });
+
+const renderHeader = (section, _, isActive) => (
+  // Function for displaying the header
+  <Animatable.View
+    duration={400}
+    style={[styles.header, isActive ? styles.active : styles.inactive]}
+    transition="backgroundColor"
+  >
+    <Text style={styles.headerText}>{section.title}</Text>
+  </Animatable.View>
+);
+
+const renderContent = (section, _, isActive) => (
+  // Function for displaying the content
+  <Animatable.View
+    duration={400}
+    style={[styles.content, isActive ? styles.active : styles.inactive]}
+    transition="backgroundColor"
+  >
+    <Animatable.Text
+      animation={isActive ? 'bounceIn' : undefined}
+      style={styles.text}
+    >
+      {section.content}
+    </Animatable.Text>
+  </Animatable.View>
+);
+
+const Stack = createNativeStackNavigator();
+
+function handleOpenWithWebBrowser(url) {
+  // This allows opening of links in the web browser
+  // It's at the top level so any page can use this function
+  WebBrowser.openBrowserAsync(url);
+}
 
 export default App;
