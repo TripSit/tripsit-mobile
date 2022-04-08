@@ -1,7 +1,7 @@
 import * as React from 'react';
 // React elements to use
 import {
-  ScrollView, TextInput, Image, StyleSheet, Text, View, TouchableOpacity,
+  Alert, ScrollView, SafeAreaView, TextInput, Image, StyleSheet, Text, View, TouchableOpacity,
 } from 'react-native';
 // This controls the bar at the top of the phone that diplays time, battery, etc
 import { StatusBar } from 'expo-status-bar';
@@ -14,6 +14,10 @@ import Accordion from 'react-native-collapsible/Accordion';
 import * as Animatable from 'react-native-animatable';
 // For opening the web browser on links
 import * as WebBrowser from 'expo-web-browser';
+// For storing data
+import * as SQLite from 'expo-sqlite';
+// import Autocomplete component
+import Autocomplete from 'react-native-autocomplete-input';
 
 // Images
 import logo from './assets/logo.jpg';
@@ -54,6 +58,7 @@ function App() {
         <Stack.Screen name="Contact" component={ContactScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
+        <Stack.Screen name="Test" component={TestScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -66,7 +71,13 @@ function HomeScreen({ navigation }) {
     <View style={styles.container}>
       {/* StatusBar is hidden on this page, which hides it on all other pages */}
       <StatusBar hidden={displayStatusBar} />
-      <Image source={logo} style={styles.logo} />
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('Test');
+        }}
+      >
+        <Image source={logo} style={styles.logo} />
+      </TouchableOpacity>
       <View>
         <View style={styles.row}>
           <TouchableOpacity
@@ -326,18 +337,270 @@ function ComboScreen() {
 }
 
 function ContactScreen() {
+  const feedback = 'Got any feedback about the app or any of the information we display? Or maybe you just want to say hello or ask a question? The links below will let you email us with any feedback, or you can always go back to the main menu and chat with us live on IRC. Join the #content channel for sources and more information on the content we provide.';
   return (
+
     <View style={styles.container}>
-      <Text style={styles.text}>Contact Screen</Text>
+      <Text style={styles.text}>{feedback}</Text>
+      <TouchableOpacity>
+        <Text style={styles.text}>Report a bug</Text>
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Text style={styles.text}>Suggestions / Requests</Text>
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Text style={styles.text}>Issues with content / information</Text>
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Text style={styles.text}>Say hello!</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 function SettingsScreen() {
+  // const [allDrugInfo, setallDrugInfo] = React.useState([]);
+  // Initialize the database
+  const db = SQLite.openDatabase('db.tripsit');
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Settings Screen</Text>
+      <TouchableOpacity
+        style={styles.searchButton}
+        onPress={() => {
+          console.log("Starting DB update")
+          // Create the table if it does not exist
+          console.log("Dropping table")
+          // db.transaction((tx) => {
+          //   tx.executeSql('DROP TABLE IF EXISTS drugs');
+          // });
+          console.log("Creating table")
+          // db.transaction((tx) => {
+          //   tx.executeSql(
+          //     'CREATE TABLE IF NOT EXISTS drugs (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, info TEXT)'
+          //   );
+          // });
+          console.log("Fetching data")
+          fetch('https://tripbot.tripsit.me/api/tripsit/getAllDrugs')
+            .then((response) => response.json())
+            .then((response) => {
+              var allDrugInfo = response.data[0]
+              console.log(Object.keys(allDrugInfo).length)
+              console.log(allDrugInfo['dxm'])
+
+              db.transaction((tx) => {
+                tx.executeSql(
+                  'INSERT INTO drugs (name, info) VALUES (?,?) ON CONFLICT(name) DO UPDATE',
+                  ["dxm","allDrugInfo['dxm'].toString()"],
+                  (tx, results) => {
+                    console.log(results)
+                  }
+                );
+              })
+
+              // TODO: Use this for the search auto-suggest
+              // Object.keys(allDrugInfo).forEach((drugName) => {
+              //   console.log(allDrugInfo[drugName].name)
+              //   // db.transaction((tx) => {
+              //   //   tx.executeSql(
+              //   //     'INSERT INTO drugs (name, info) VALUES (?,?) ON CONFLICT(name) DO UPDATE',
+              //   //     [drugName,allDrugInfo[drugName].toString()],
+              //   //     (tx, results) => {
+              //   //       console.log(results)
+              //   //     }
+              //   //   );
+              //   // })
+              // });
+              console.log("DB Updated")
+              // Alert.alert(
+              //   'Alert',
+              //   'DB updated!'
+              // )
+            });
+        }}
+      >
+        <Text style={styles.buttonText}>
+          Download database for offline use
+        </Text>
+      </TouchableOpacity>
+      {/* <TouchableOpacity
+        style={styles.searchButton}
+        onPress={() => {
+          db.transaction((tx) => {
+            tx.executeSql(
+              "SELECT name, info FROM drugs WHERE name='dxm'",
+              [],
+              (tx, results) => {
+                console.log(results.rows)
+                Alert.alert(
+                  'Alert',
+                  'test'
+                );
+              }
+            );
+          });
+        }}
+      >
+        <Text style={styles.buttonText}>
+          Get Data
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.searchButton}
+        onPress={() => {
+          console.log("Get All Data")
+          db.transaction((tx) => {
+            tx.executeSql(
+              'SELECT * FROM drugs', null,
+              (txObj, { rows: { _array } }) => {
+                Alert.alert(
+                  'Alert Title',
+                  _array.toString()
+                );
+              },
+              (txObj, error) => {
+                Alert.alert(
+                  'Alert Title',
+                  error.toString()
+                );
+              }
+            );
+          });
+        }}
+      >
+        <Text style={styles.buttonText}>
+          Get all data
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.searchButton}
+        onPress={() => {
+          console.log("Add data")
+          db.transaction((tx) => {
+            tx.executeSql(
+              'INSERT INTO drugs (name, info) VALUES (?,?) ON CONFLICT(name) DO UPDATE',
+              ["dxm","info"]
+            );
+          });
+        }}
+      >
+        <Text style={styles.buttonText}>
+          Add new data
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.searchButton}
+        onPress={() => {
+          console.log("Delete table")
+          db.transaction((tx) => {
+            tx.executeSql(
+              'DROP TABLE IF EXISTS drugs',
+              []
+              );
+          });
+          console.log("Deleted table")
+        }}
+      >
+        <Text style={styles.buttonText}>
+          Delete table
+        </Text>
+      </TouchableOpacity> */}
+      {/* <TouchableOpacity
+        style={styles.searchButton}
+        onPress={() => {
+          console.log("Create table")
+          db.transaction(tx => {
+            tx.executeSql(
+              'CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, count INT)'
+            )
+          })
+          console.log("create table finished")
+        }}
+      >
+        <Text style={styles.buttonText}>
+          Create table
+        </Text>
+      </TouchableOpacity> */}
     </View>
+  );
+}
+
+function TestScreen() {
+  const [drugs, setDrugs] = React.useState(['a', 'b', 'c']);
+  const [filderedDrugs, setFilteredDrugs] = React.useState([]);
+  const [selectedValue, setSelectedValue] = React.useState({});
+  // const db = SQLite.openDatabase('db.tripsit');
+
+  React.useEffect(() => {
+    fetch('https://tripbot.tripsit.me/api/tripsit/getallDrugInfo')
+      .then((res) => res.json())
+      .then((json) => {
+        // const { results: films } = json.data[0];
+        setDrugs(json.data[0]);
+        // setting the data in the films state
+      })
+      .catch((e) => {
+        Alert.alert(
+          'Alert',
+          e.toString()
+        );
+      });
+  }, []);
+
+  const findDrug = (query) => {
+    // method called everytime when we change the value of the input
+    if (query) {
+      // making a case insensitive regular expression to get similar value from the drug json
+      const regex = new RegExp(`${query.trim()}`, 'i');
+      // setting the filtered drug array according the query from the input
+      // TODO: Figure this out, i have no idea why this doesn't want to work
+      // setFilteredDrugs(drugs.filter((drug) => drug.search(regex) >= 0));
+      // setFilteredDrugs(drugs);
+      // setFilteredDrugs(drugs.filter((drug) => drug === 'dxm'));
+      // setFilteredDrugs(drugs.filter((drug) => drug.length > 4));
+      
+      // setFilteredDrugs(drugs.filter((drug) => drug.includes('dxm')));
+      setFilteredDrugs(drugs
+        .filter(Boolean)
+        .filter(drug => drug.toLowerCase().replace(/\-/g, '')
+          .includes(query.trim().toLowerCase().replace(/\-/g, ''))));
+    } else {
+      // if the query is null then return blank
+      setFilteredDrugs([]);
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.flex}>
+      <View style={styles.container}>
+        <Autocomplete
+          autoCapitalize="none"
+          autoCorrect={false}
+          containerStyle={styles.autocompleteContainer}
+            // data to show in suggestion
+          data={filderedDrugs}
+            // default value if you want to set something in input
+          defaultValue={
+              JSON.stringify(selectedValue) === '{}' ? '' : selectedValue
+            }
+            /* onchange of the text changing the state of the query which will trigger
+            the findDrug method to show the suggestions */
+          onChangeText={(text) => findDrug(text)}
+          placeholder="Enter the drug title"
+          renderItem={({ item }) => (
+            // you can change the view you want to show in suggestion from here
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedValue(item);
+                setFilteredDrugs([]);
+              }}
+            >
+              <Text style={styles.itemText}>{item.title}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -346,16 +609,15 @@ function AboutScreen() {
   const disclaimer = 'Although we have a team dedicated to keeping the information on this app up to date, it is not always possible to provide entirely accurate information on the safety level of drugs. The information here should be used as guidelines only, and it is important to do your own research from multiple sources before ingesting a substance. We also strongly advise using a testing kit and scales to ensure you are taking the correct dosage. These can both be bought online for reasonable prices.';
   const support = 'TripSit is a completely free service run by volunteers. If you wish to help out, feel free to join the IRC, follow and share our content on social media, or make a donation to keep the servers running.';
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <View style={styles.container} />
-        <Text style={styles.text}>About TripSit</Text>
+    <View style={styles.container}>
+      <ScrollView>
+        <Text style={styles.aboutHeaderText}>About TripSit</Text>
         <Text style={styles.text}>{about}</Text>
-        <Text style={styles.text}>Disclaimer</Text>
+        <Text style={styles.aboutHeaderText}>Disclaimer</Text>
         <Text style={styles.text}>{disclaimer}</Text>
-        <Text style={styles.text}>Support TripSit</Text>
+        <Text style={styles.aboutHeaderText}>Support TripSit</Text>
         <Text style={styles.text}>{support}</Text>
-        <View style={styles.row}>
+        <View style={[styles.row, styles.justifyCenter]}>
           <TouchableOpacity
             onPress={() => {
               handleOpenWithWebBrowser('https://expo.dev');
@@ -385,8 +647,8 @@ function AboutScreen() {
             <Image source={bitcointImage} style={styles.icon} />
           </TouchableOpacity>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -400,7 +662,12 @@ const color = {
 };
 
 const styles = StyleSheet.create({
-
+  flex: {
+    flex: 1
+  },
+  justifyCenter: {
+    justifyContent: 'center'
+  },
   row: {
     flexDirection: 'row',
   },
@@ -456,6 +723,11 @@ const styles = StyleSheet.create({
     backgroundColor: color.purple,
     padding: 10,
   },
+  aboutHeaderText: {
+    fontSize: 20,
+    color: color.white,
+    alignSelf: 'center'
+  },
   headerText: {
     textAlign: 'center',
     fontSize: 16,
@@ -502,6 +774,9 @@ const renderContent = (section, _, isActive) => (
 
 const Stack = createNativeStackNavigator();
 
+// Initialize the database
+const db = SQLite.openDatabase('db.tripsit');
+
 function handleOpenWithWebBrowser(url) {
   // This allows opening of links in the web browser
   // It's at the top level so any page can use this function
@@ -509,3 +784,5 @@ function handleOpenWithWebBrowser(url) {
 }
 
 export default App;
+
+// TODO: to allow searching by nickname
