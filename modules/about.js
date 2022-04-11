@@ -99,15 +99,11 @@ const styles = StyleSheet.create({
     },
   });
 
-
-
-
-
 function handleOpenWithWebBrowser(url) {
-    // This allows opening of links in the web browser
-    // It's at the top level so any page can use this function
-    WebBrowser.openBrowserAsync(url);
-  }
+  // This allows opening of links in the web browser
+  // It's at the top level so any page can use this function
+  WebBrowser.openBrowserAsync(url);
+}
 
 import facebookImage from '../assets/facebook.png';
 import redditImage from '../assets/reddit.png';
@@ -116,7 +112,7 @@ import bitcointImage from '../assets/bitcoin.png';
 
 
 function AboutScreen() {
-    const about = 'This app is created by TripSit, an organisation which helps to provide factual information about drugs and how to reduce the harms involved in using them. We also have an active IRC (internet relay chat) network where we provide tripsitting services, harm reduction advice, and general chat.\nhttp://www.tripsit.me/';
+    const about = 'This app is created by TripSit, an organisation which helps to provide factual information about drugs and how to reduce the harms involved in using them. We also have an active IRC (internet relay chat) network where we provide tripsitting services, harm reduction advice, and general chat.';
     const disclaimer = 'Although we have a team dedicated to keeping the information on this app up to date, it is not always possible to provide entirely accurate information on the safety level of drugs. The information here should be used as guidelines only, and it is important to do your own research from multiple sources before ingesting a substance. We also strongly advise using a testing kit and scales to ensure you are taking the correct dosage. These can both be bought online for reasonable prices.';
     const support = 'TripSit is a completely free service run by volunteers. If you wish to help out, feel free to join the IRC, follow and share our content on social media, or make a donation to keep the servers running.';
     return (
@@ -131,28 +127,28 @@ function AboutScreen() {
           <View style={[styles.row, styles.justifyCenter]}>
             <TouchableOpacity
               onPress={() => {
-                handleOpenWithWebBrowser('https://expo.dev');
+                handleOpenWithWebBrowser('https://www.facebook.com/groups/tripsit/');
               }}
             >
               <Image source={facebookImage} style={styles.icon} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                handleOpenWithWebBrowser('https://expo.dev');
+                handleOpenWithWebBrowser('https://www.reddit.com/r/TripSit/');
               }}
             >
               <Image source={redditImage} style={styles.icon} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                handleOpenWithWebBrowser('https://expo.dev');
+                handleOpenWithWebBrowser('https://twitter.com/teamtripsit');
               }}
             >
               <Image source={twitterImage} style={styles.icon} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                handleOpenWithWebBrowser('https://expo.dev');
+                handleOpenWithWebBrowser('https://tripsit.me/donate/');
               }}
             >
               <Image source={bitcointImage} style={styles.icon} />
