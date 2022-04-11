@@ -1,23 +1,14 @@
 import * as React from 'react';
 import {
-  Platform,
   SafeAreaView,
-  ScrollView,
   StyleSheet,
   Text,
-  TextInput,
-  useColorScheme,
   View,
   TouchableOpacity,
 } from "react-native"
 
-import { Colors } from "react-native/Libraries/NewAppScreen"
 import * as allDrugData from '../assets/allDrugData.json';
 import SearchableDropdown from 'react-native-searchable-dropdown';
-// For the collapseable view on the Facts page
-import Accordion from 'react-native-collapsible/Accordion';
-// For the animation of Collapse and Expand on the accordian
-import * as Animatable from 'react-native-animatable';
 
 // For each dictionary in the allDrugData list, find the "name" key and add it to a list of index-title pairs
 const drugNames = Object.keys(allDrugData).map((key, index) => {
@@ -29,9 +20,11 @@ const drugNames = Object.keys(allDrugData).map((key, index) => {
   }
 })
 
+
 // Okay this is stupid, but I'm not sure how to do it better
 // We pop out the last element of the array, because the above MAP function adds an 'undefined' element to the array
-// I have no idea why it does this, but it does
+// The above function adds an undefined element because that's how the JSON file is imported, for some reason
+// TODO - JSON UNDEFINED ISSUE
 drugNames.pop()
 
 // console.log(drugNames)
@@ -50,27 +43,46 @@ function TestScreen() {
 
   function getDrugCombo() {
     console.log("started combo!")
-
-    // console.log("drugA is: " + drugA)
-    // console.log("drugB is: " + drugB)
-    // if (!!drugA) {
-    //   console.log("drugA is: " + drugA)
-    // }
-    // if (!!drugB) {
-    //   console.log("drugB is: " + drugB)
-    // }
-    // if (!!drugA && !!drugB) {
-    //   console.log("both drugs are set!")
-    //   setResults("testing!")
-    //   setShouldShow(true);
-    // }
-
     console.log("drug_a is: " + drug_a)
     console.log("drug_b is: " + drug_b)
+    var comboData = ""
     if (drug_a != "" && drug_b != "") {
       console.log("both drugs are set!")
-      setResults("ZOMG testing!")
-      setShouldShow(true);
+      for (var i = 0; i < Object.keys(allDrugData).length; i++) {
+        // TODO - JSON UNDEFINED ISSUE - Same as above
+        if (!!allDrugData[i]) {
+          // console.debug("allDrugData[i]['name'] is: " + allDrugData[i]['name'])
+          if (allDrugData[i]['name'] == drug_a) {
+            console.debug("found drug_a: " + drug_a)
+            drugData = allDrugData[i]
+            if (!!allDrugData[i]['interactions']) {
+              console.debug("drug_a has interactions!")
+              // console.debug("drugData[i]['interactions'] is: " + allDrugData[i]['interactions'])
+              for (var j = 0; j < allDrugData[i]['interactions'].length; j++) {
+                // console.debug("j is: " + j)
+                // console.debug("allDrugData[i]['interactions'][j]['name'] is: " + allDrugData[i]['interactions'][j]['name'])
+                if (allDrugData[i]['interactions'][j]['name'] == drug_b) {
+                  console.debug("found drug_b: " + drug_b)
+                  comboData = allDrugData[i]['interactions'][j]['status']
+                  console.debug("comboData is: " + comboData)
+                  setResults(comboData)
+                  setShouldShow(true)
+                  break
+                }
+              }
+              if (comboData == "") {
+                setResults("Interaction data not found between " + drug_a + " and " + drug_b)
+                setShouldShow(true)
+                break
+              }
+            } else {
+              setResults("Interaction data not found for " + drug_a)
+              setShouldShow(true)
+              break
+            }
+          }
+        }
+      }
     }
   }
 
@@ -81,7 +93,7 @@ function TestScreen() {
         <View>
             <SearchableDropdown
               onItemSelect={(item) => {
-                console.log(item.name)
+                // console.log(item.name)
                 drug_a = item.name
                 setDrugA(item.name)
                 getDrugCombo()
@@ -122,7 +134,7 @@ function TestScreen() {
           <View>
             <SearchableDropdown
               onItemSelect={(item) => {
-                console.log(item.name)
+                // console.log(item.name)
                 drug_b = item.name
                 setDrugB(item.name)
                 getDrugCombo()
