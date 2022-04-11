@@ -6,14 +6,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const about = require("./modules/about");
-// const test = require("./modules/test");
-// const settings = require("./modules/settings");
+const test = require("./modules/test");
+const settings = require("./modules/settings");
 const contact = require("./modules/contact");
 const combo = require("./modules/combo");
 const facts = require("./modules/facts");
 const home = require("./modules/home");
 
-const color = {
+const color_dict = {
   black: '#000000',
   red: '#FF0000',
   green: '#00FF00',
@@ -37,11 +37,11 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
     padding: 10,
-    backgroundColor: color.white,
+    backgroundColor: color_dict.white,
   },
   container: {
     flex: 1,
-    backgroundColor: color.black,
+    backgroundColor: color_dict.black,
     alignItems: 'center',
   },
   logo: {
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   searchButton: {
-    backgroundColor: color.purple,
+    backgroundColor: color_dict.purple,
     padding: 20,
     borderRadius: 5,
     height: 10,
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 20,
-    color: color.white,
+    color: color_dict.white,
     alignSelf: 'center',
   },
   icon: {
@@ -78,31 +78,31 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    color: color.white,
+    color: color_dict.white,
   },
   header: {
-    backgroundColor: color.purple,
+    backgroundColor: color_dict.purple,
     padding: 10,
   },
   aboutHeaderText: {
     fontSize: 20,
-    color: color.white,
+    color: color_dict.white,
     alignSelf: 'center'
   },
   headerText: {
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '500',
-    color: color.white,
+    color: color_dict.white,
   },
   content: {
     padding: 20,
   },
   active: {
-    backgroundColor: color.black,
+    backgroundColor: color_dict.black,
   },
   inactive: {
-    backgroundColor: color.black,
+    backgroundColor: color_dict.black,
   },
 });
 
@@ -129,9 +129,9 @@ function App() {
         <Stack.Screen name="TripSit's Factsheet Search" component={facts.FactsScreen} />
         <Stack.Screen name="TripSit's Combo Search" component={combo.ComboScreen} />
         <Stack.Screen name="Contact" component={contact.ContactScreen} />
-        {/* <Stack.Screen name="Settings" component={settings.SettingsScreen} /> */}
+        <Stack.Screen name="Settings" component={settings.SettingsScreen} />
         <Stack.Screen name="About" component={about.AboutScreen} />
-        {/* <Stack.Screen name="Test" component={test.TestScreen} /> */}
+        <Stack.Screen name="Test" component={test.TestScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
