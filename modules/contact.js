@@ -90,7 +90,7 @@ function ContactScreen() {
             // algo
             MailComposer.composeAsync({
               recipients: 
-              ['mobile@gmail.com'],
+              ['mobile@tripsit.me'],
               subject: 'Contact email from the app!',
               body: 'Hey Team Tripsit, I want to ask...',
             });
