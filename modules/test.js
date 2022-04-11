@@ -1,87 +1,295 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow strict-local
- */
-
-import React, { Node } from "react"
+import * as React from 'react';
 import {
   Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
+  TextInput,
   useColorScheme,
-  View
+  View,
+  TouchableOpacity,
 } from "react-native"
+
 import { Colors } from "react-native/Libraries/NewAppScreen"
+import * as allDrugData from '../assets/allDrugData.json';
+import SearchableDropdown from 'react-native-searchable-dropdown';
+// For the collapseable view on the Facts page
+import Accordion from 'react-native-collapsible/Accordion';
+// For the animation of Collapse and Expand on the accordian
+import * as Animatable from 'react-native-animatable';
+
+// For each dictionary in the allDrugData list, find the "name" key and add it to a list of index-title pairs
+const drugNames = Object.keys(allDrugData).map((key, index) => {
+  // console.log(allDrugData[key]["name"] + allDrugData[key]["url"])
+  // console.log(allDrugData[key]["summary"])
+  return {
+    id: index,
+    name: allDrugData[key]["name"]
+  }
+})
+
+// Okay this is stupid, but I'm not sure how to do it better
+// We pop out the last element of the array, because the above MAP function adds an 'undefined' element to the array
+// I have no idea why it does this, but it does
+drugNames.pop()
+
+// console.log(drugNames)
+var drug_a = "";
+var drug_b = "";
 
 function TestScreen() {
-  const isDarkMode = useColorScheme() === "dark"
+  // Define objects to hold search data
+  const [drugA, setDrugA] = React.useState('');
+  const [drugB, setDrugB] = React.useState('');
+  // Much like Factsheets, the results only display after you search
+  const [shouldShow, setShouldShow] = React.useState(false);
+  // Define object to store results
+  const [results, setResults] = React.useState({});
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
+
+  function getDrugCombo() {
+    console.log("started combo!")
+
+    // console.log("drugA is: " + drugA)
+    // console.log("drugB is: " + drugB)
+    // if (!!drugA) {
+    //   console.log("drugA is: " + drugA)
+    // }
+    // if (!!drugB) {
+    //   console.log("drugB is: " + drugB)
+    // }
+    // if (!!drugA && !!drugB) {
+    //   console.log("both drugs are set!")
+    //   setResults("testing!")
+    //   setShouldShow(true);
+    // }
+
+    console.log("drug_a is: " + drug_a)
+    console.log("drug_b is: " + drug_b)
+    if (drug_a != "" && drug_b != "") {
+      console.log("both drugs are set!")
+      setResults("ZOMG testing!")
+      setShouldShow(true);
+    }
   }
 
   return (
-    <SafeAreaView style={[backgroundStyle, { flex: 1 }]}>
-      <ScrollView
-        nestedScrollEnabled
-        keyboardDismissMode="on-drag"
-        keyboardShouldPersistTaps="handled"
-        contentInsetAdjustmentBehavior="automatic"
-        style={styles.scrollContainer}
-      >
-        <View style={[styles.container]}>
-          <Text style={styles.title}>Autocomplete dropdown</Text>
-          <View
-            style={[styles.section, Platform.select({ ios: { zIndex: 100 } })]}
-          >
-            <Text style={styles.sectionTitle}>Local list</Text>
-            <View>
-              <AutocompleteDropdown
-                clearOnFocus={false}
-                closeOnBlur={true}
-                initialValue={{ id: "2" }} // or just '2'
-                onSelectItem={setSelectedItem}
-                dataSet={[
-                  { id: "1", title: "Alpha" },
-                  { id: "2", title: "Beta" },
-                  { id: "3", title: "Gamma" }
-                ]}
-              />
-              <Text style={{ color: "#668", fontSize: 13 }}>
-                Selected item: {JSON.stringify(selectedItem)}
-              </Text>
-            </View>
+    <SafeAreaView style={[{ flex: 1 }]}>
+      <View style={styles.container}>
+        <View style={styles.row}>
+        <View>
+            <SearchableDropdown
+              onItemSelect={(item) => {
+                console.log(item.name)
+                drug_a = item.name
+                setDrugA(item.name)
+                getDrugCombo()
+              }}
+              containerStyle={{ padding: 5 }}
+              itemStyle={{
+                padding: 10,
+                marginTop: 2,
+                backgroundColor: '#ddd',
+                borderColor: '#bbb',
+                borderWidth: 1,
+                borderRadius: 5,
+              }}
+              itemTextStyle={{ color: '#222' }}
+              itemsContainerStyle={{ maxHeight: 140 }}
+              items={drugNames}
+              resetValue={false}
+              textInputProps={
+                {
+                  placeholder: "Search substance here!",
+                  underlineColorAndroid: "transparent",
+                  style: {
+                      padding: 12,
+                      borderWidth: 1,
+                      borderColor: '#ccc',
+                      borderRadius: 5,
+                      backgroundColor: '#ffffff'
+                  },
+                }
+              }
+              listProps={
+                {
+                  nestedScrollEnabled: true,
+                }
+              }
+            />
+          </View>
+          <View>
+            <SearchableDropdown
+              onItemSelect={(item) => {
+                console.log(item.name)
+                drug_b = item.name
+                setDrugB(item.name)
+                getDrugCombo()
+              }}
+              containerStyle={{ padding: 5 }}
+              itemStyle={{
+                padding: 10,
+                marginTop: 2,
+                backgroundColor: '#ddd',
+                borderColor: '#bbb',
+                borderWidth: 1,
+                borderRadius: 5,
+              }}
+              itemTextStyle={{ color: '#222' }}
+              itemsContainerStyle={{ maxHeight: 140 }}
+              items={drugNames}
+              resetValue={false}
+              textInputProps={
+                {
+                  placeholder: "Search substance here!",
+                  underlineColorAndroid: "transparent",
+                  style: {
+                      padding: 12,
+                      borderWidth: 1,
+                      borderColor: '#ccc',
+                      borderRadius: 5,
+                      backgroundColor: '#ffffff'
+                  },
+                }
+              }
+              listProps={
+                {
+                  nestedScrollEnabled: true,
+                }
+              }
+            />
           </View>
         </View>
-      </ScrollView>
+        <View style={styles.row}>
+          <TouchableOpacity
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>{drugA}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>{drugB}</Text>
+          </TouchableOpacity>
+        </View>
+        {shouldShow ? (
+          <View style={styles.container}>
+            <Text style={styles.buttonText}>{results}</Text>
+          </View>
+        ) : null}
+      </View>
     </SafeAreaView>
   )
 }
 
+const color_dict = {
+  black: '#000000',
+  red: '#FF0000',
+  green: '#00FF00',
+  blue: '#0000FF',
+  white: '#FFFFFF',
+  purple: '#4B0082',
+};
+
 const styles = StyleSheet.create({
-  scrollContainer: {
+  flex: {
     flex: 1
   },
+  justifyCenter: {
+    justifyContent: 'center'
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  input: {
+    height: 50,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+    backgroundColor: color_dict.white,
+  },
   container: {
-    padding: 20
+    flex: 1,
+    backgroundColor: color_dict.black,
+    alignItems: 'center',
+    // padding: 20,
+  },
+  logo: {
+    width: 305,
+    height: 159,
+    marginBottom: 10,
+  },
+  button: {
+    width: '50%',
+    padding: 20,
+    borderRadius: 5,
+  },
+  searchButton: {
+    backgroundColor: color_dict.purple,
+    padding: 20,
+    borderRadius: 5,
+    height: 10,
+    justifyContent: 'space-around'
+  },
+  doubleButton: {
+    width: '100%',
+    padding: 20,
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontSize: 20,
+    color: color_dict.white,
+    alignSelf: 'center',
+  },
+  icon: {
+    height: 60,
+    width: 60,
+    alignSelf: 'center',
+  },
+  text: {
+    fontSize: 16,
+    color: color_dict.white,
+  },
+  header: {
+    backgroundColor: color_dict.purple,
+    padding: 10,
+  },
+  aboutHeaderText: {
+    fontSize: 20,
+    color: color_dict.white,
+    alignSelf: 'center'
+  },
+  headerText: {
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '500',
+    color: color_dict.white,
+  },
+  content: {
+    padding: 20,
+  },
+  active: {
+    backgroundColor: color_dict.black,
+  },
+  inactive: {
+    backgroundColor: color_dict.black,
+  },
+  scrollContainer: {
+    flex: 1
   },
   title: {
     textAlign: "center",
     fontSize: 25,
     marginBottom: 50
   },
-  section: {
-    marginBottom: 40
-  },
   sectionTitle: {
     fontWeight: "bold",
-    marginBottom: 3
-  }
-})
+    marginBottom: 3,
+  },
+  section: {
+    marginBottom: 40,
+  },
+});
 
 module.exports = { TestScreen };
