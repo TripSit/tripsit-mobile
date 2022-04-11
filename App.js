@@ -5,13 +5,46 @@ import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-const about = require("./modules/about");
-const test = require("./modules/test");
-const settings = require("./modules/settings");
-const contact = require("./modules/contact");
-const combo = require("./modules/combo");
-const facts = require("./modules/facts");
+// const about = require("./modules/about");
+// const test = require("./modules/test");
+// const settings = require("./modules/settings");
+// const contact = require("./modules/contact");
+// const combo = require("./modules/combo");
+// const facts = require("./modules/facts");
 const home = require("./modules/home");
+
+
+
+function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        // These settings control the navigation bar
+        // By default this bar does not appear on the homepage
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: '#000',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerTitleAlign: 'center',
+        }}
+      >
+        {/* Every screen the user will see must be defined here first */}
+        {/* Then use the navigation module and touchableOpacity  */}
+        <Stack.Screen name="Home" component={home.HomeScreen} options={{ headerShown: false }} />
+        {/* <Stack.Screen name="TripSit's Factsheet Search" component={facts.FactsScreen} />
+        <Stack.Screen name="TripSit's Combo Search" component={combo.ComboScreen} />
+        <Stack.Screen name="Contact" component={contact.ContactScreen} />
+        <Stack.Screen name="Settings" component={settings.SettingsScreen} />
+        <Stack.Screen name="About" component={about.AboutScreen} />
+        <Stack.Screen name="Test" component={test.TestScreen} /> */}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
 
 const color_dict = {
   black: '#000000',
@@ -105,37 +138,6 @@ const styles = StyleSheet.create({
     backgroundColor: color_dict.black,
   },
 });
-
-function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
-        // These settings control the navigation bar
-        // By default this bar does not appear on the homepage
-        screenOptions={{
-          headerStyle: {
-            backgroundColor: '#000',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-          headerTitleAlign: 'center',
-        }}
-      >
-        {/* Every screen the user will see must be defined here first */}
-        {/* Then use the navigation module and touchableOpacity  */}
-        <Stack.Screen name="Home" component={home.HomeScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="TripSit's Factsheet Search" component={facts.FactsScreen} />
-        <Stack.Screen name="TripSit's Combo Search" component={combo.ComboScreen} />
-        <Stack.Screen name="Contact" component={contact.ContactScreen} />
-        <Stack.Screen name="Settings" component={settings.SettingsScreen} />
-        <Stack.Screen name="About" component={about.AboutScreen} />
-        <Stack.Screen name="Test" component={test.TestScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
 
 const Stack = createNativeStackNavigator();
 
