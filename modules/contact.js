@@ -35,7 +35,7 @@ function ContactScreen() {
   const [status, setStatus] = React.useState(null)
   
   function sendEmail() {
-    console.log('test')
+    // console.log('test')
     var options = {
       subject: "Sending email without attachment",
       recipients: ["talkwithcharles@gmail.com"],

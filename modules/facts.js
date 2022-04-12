@@ -79,10 +79,10 @@ function FactsScreen() {
   };
 
   function getDrugInfo(drugName) {
-    console.log("starting getDrugInfo with parameter: " + drugName)
+    // console.log("starting getDrugInfo with parameter: " + drugName)
     // loop through allDrugData to find the drugName
     var drugData = {}
-    console.debug("all drug data length is: " + Object.keys(allDrugData).length)
+    // console.debug("all drug data length is: " + Object.keys(allDrugData).length)
 
     for (var i = 0; i < Object.keys(allDrugData).length; i++) {
       // console.debug("i is: " + i)
@@ -119,14 +119,14 @@ function FactsScreen() {
 
     var dosage = ""
     for (var i = 0; i < drugData["roas"].length; i++) {
-      console.log(drugData["roas"][i].name)
+      // console.log(drugData["roas"][i].name)
       dosage += drugData["roas"][i].name + " Dosage\n"
       if (!!drugData["roas"][i].bioavailability){dosage += "Bioavailability: " + drugData["roas"][i].bioavailability + "\n"}
       for (var j = 0; j < drugData["roas"][i].dosage.length; j++) {
         if (j == 0 ) {
           if (!!drugData["roas"][i].dosage[j].note){dosage += "Note: " + drugData["roas"][i].dosage[j].note + "\n"}
         }
-        console.log(drugData["roas"][i].dosage[j].name + ": " + drugData["roas"][i].dosage[j].value)
+        // console.log(drugData["roas"][i].dosage[j].name + ": " + drugData["roas"][i].dosage[j].value)
         dosage += drugData["roas"][i].dosage[j].name + ": " + drugData["roas"][i].dosage[j].value + "\n"
       }
       dosage += "\n" + drugData["roas"][i].name + " Duration" + "\n"
@@ -134,7 +134,7 @@ function FactsScreen() {
         if (j == 0 ) {
           if (!!drugData["roas"][i].duration[j].note){dosage += "Note: " + drugData["roas"][i].duration[j].note + "\n"}
         }
-        console.log(drugData["roas"][i].duration[j].name + ": " + drugData["roas"][i].duration[j].value)
+        // console.log(drugData["roas"][i].duration[j].name + ": " + drugData["roas"][i].duration[j].value)
         dosage += drugData["roas"][i].duration[j].name + ": " + drugData["roas"][i].duration[j].value + "\n"
       }
       dosage += "\n"
@@ -235,7 +235,7 @@ function FactsScreen() {
           <View>
             <SearchableDropdown
               onItemSelect={(item) => {
-                console.log(item.name)
+                // console.log(item.name)
                 getDrugInfo(item.name)
               }}
               containerStyle={{ padding: 5 }}
