@@ -106,19 +106,19 @@ function SettingsScreen() {
         <TouchableOpacity
           style={styles.searchButton}
           onPress={() => {
-            console.log("Starting DB update")
+            // console.log("Starting DB update")
             // Create the table if it does not exist
-            console.log("Dropping table")
+            // console.log("Dropping table")
             // db.transaction((tx) => {
             //   tx.executeSql('DROP TABLE IF EXISTS drugs');
             // });
-            console.log("Creating table")
+            // console.log("Creating table")
             // db.transaction((tx) => {
             //   tx.executeSql(
             //     'CREATE TABLE IF NOT EXISTS drugs (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, info TEXT)'
             //   );
             // });
-            console.log("Fetching data")
+            // console.log("Fetching data")
             fetch('https://tripbot.tripsit.me/api/tripsit/getAllDrugs')
               .then((response) => response.json())
               .then((response) => {
@@ -131,25 +131,25 @@ function SettingsScreen() {
                 //     'INSERT INTO drugs (name, info) VALUES (?,?) ON CONFLICT(name) DO UPDATE',
                 //     ["dxm","allDrugInfo['dxm'].toString()"],
                 //     (tx, results) => {
-                //       console.log(results)
+                //       // console.log(results)
                 //     }
                 //   );
                 // })
   
                 // // TODO: Use this for the search auto-suggest
                 // Object.keys(allDrugInfo).forEach((drugName) => {
-                //   console.log(allDrugInfo[drugName].name)
+                //   // console.log(allDrugInfo[drugName].name)
                 //   db.transaction((tx) => {
                 //     tx.executeSql(
                 //       'INSERT INTO drugs (name, info) VALUES (?,?) ON CONFLICT(name) DO UPDATE',
                 //       [drugName,allDrugInfo[drugName].toString()],
                 //       (tx, results) => {
-                //         console.log(results)
+                //         // console.log(results)
                 //       }
                 //     );
                 //   })
                 // });
-                console.log("DB Updated")
+                // console.log("DB Updated")
                 Alert.alert(
                   'Alert',
                   'DB updated!'

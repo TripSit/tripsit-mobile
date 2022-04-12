@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "TripMobileExpo",
-    "slug": "TripMobileExpo",
-    "version": "1.0.0",
+    "name": "TripMobile",
+    "slug": "TripMobile",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -24,7 +24,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "me.tripsit.tripmobile"
+      "package": "me.tripsit.mobile",
+      "versionCode": 2 
     },
     "web": {
       "favicon": "./assets/favicon.png"
