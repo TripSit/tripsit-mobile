@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
 } from "react-native"
 
-import * as allDrugData from '../assets/allDrugData.json';
 import SearchableDropdown from 'react-native-searchable-dropdown';
 
 // For each dictionary in the allDrugData list, find the "name" key and add it to a list of index-title pairs

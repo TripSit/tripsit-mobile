@@ -105,10 +105,10 @@ function handleOpenWithWebBrowser(url) {
   WebBrowser.openBrowserAsync(url);
 }
 
-import facebookImage from '../assets/facebook.png';
-import redditImage from '../assets/reddit.png';
-import twitterImage from '../assets/twitter.png';
-import bitcointImage from '../assets/bitcoin.png';
+import facebookImage from '../assets/images/facebook.png';
+import redditImage from '../assets/images/reddit.png';
+import twitterImage from '../assets/images/twitter.png';
+import bitcointImage from '../assets/images/bitcoin.png';
 
 
 function AboutScreen() {

@@ -6,8 +6,8 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import * as allDrugData from "../assets/allDrugData.json";
-import * as combo_definitions from "../assets/combo_definitions.json";
+import * as allDrugData from "../assets/data/drug_db_combined.json";
+import * as combo_definitions from "../assets/data/combo_definitions.json";
 import SearchableDropdown from "react-native-searchable-dropdown";
 // const logger = require('./utils/logger.js');
 // const PREFIX = require('path').parse(__filename).name;

@@ -19,14 +19,14 @@ function handleOpenWithWebBrowser(url) {
 }
 
 // Images
-import logo from '../assets/logo.jpg';
-import chatImage from '../assets/chat.png';
-import factsheetsImage from '../assets/document.png';
-import combinationsImage from '../assets/flasks.png';
-import wikiImage from '../assets/globe.png';
-// import settingsImage from '../assets/gears.png';
-import contactImage from '../assets/contact.png';
-import aboutImage from '../assets/about.png';
+import logo from '../assets/images/logo.jpg';
+import chatImage from '../assets/images/chat.png';
+import factsheetsImage from '../assets/images/document.png';
+import combinationsImage from '../assets/images/flasks.png';
+import wikiImage from '../assets/images/globe.png';
+// import settingsImage from '../assets/images/gears.png';
+import contactImage from '../assets/images/contact.png';
+import aboutImage from '../assets/images/about.png';
 
 function HomeScreen({ navigation }) {
     // Set the display of the status bar to false
