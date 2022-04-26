@@ -1,12 +1,14 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
+    "start": "npm version patch -git-tag-version false && expo start",
     "eject": "expo eject",
-    "lint": "eslint *.js **/*.js App.js"
+    "lint": "eslint *.js **/*.js App.js",
+    "fix": "eslint --fix --ext .js,.jsx,.ts,.tsx ./",
+    "minor_update": "npm version minor -git-tag-version false && git add . && git commit -m \"Update\" && git push",
+    "build and": "eas build --platform android",
+    "build ios": "eas build --platform ios",
+    "build all": "eas build --platform all"
   },
   "dependencies": {
     "@react-navigation/native": "^6.0.6",
@@ -42,5 +44,6 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-react-native": "^3.11.0"
   },
-  "private": true
+  "private": true,
+  "version": "0.1.0"
 }

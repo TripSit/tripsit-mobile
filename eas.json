@@ -3,14 +3,48 @@
     "version": ">= 0.50.0"
   },
   "build": {
-    "development": {
-      "developmentClient": true,
-      "distribution": "internal"
+    "base": {
+      "node": "16.14.2",
+      "npm": "8.5.0",
+      "env": {
+        "EXAMPLE_ENV": "base"
+      },
+      "android": {
+        "image": "default",
+        "env": {
+          "PLATFORM": "android"
+        },
+        "autoIncrement": true
+      },
+      "ios": {
+        "image": "latest",
+        "env": {
+          "PLATFORM": "ios"
+        },
+        "autoIncrement": true
+      }
+    },
+    "production": {
+      "extends": "base",
+      "env": {
+        "ENVIRONMENT": "production"
+      }
     },
     "preview": {
-      "distribution": "internal"
+      "extends": "base",
+      "distribution": "internal",
+      "env": {
+        "ENVIRONMENT": "preview"
+      }
     },
-    "production": {}
+    "development": {
+      "extends": "base",
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "ENVIRONMENT": "development"
+      }
+    }
   },
   "submit": {
     "production": {}
