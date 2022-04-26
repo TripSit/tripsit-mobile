@@ -5,7 +5,6 @@
   "build": {
     "base": {
       "node": "16.14.2",
-      "npm": "8.5.0",
       "env": {
         "EXAMPLE_ENV": "base"
       },
