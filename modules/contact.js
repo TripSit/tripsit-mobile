@@ -86,14 +86,24 @@ function ContactScreen() {
       </TouchableOpacity>
       <TouchableOpacity 
           style={styles.searchButton}
-          onPress={() => {
-            // algo
-            MailComposer.composeAsync({
-              recipients: 
-              ['mobile@tripsit.me'],
-              subject: 'Contact email from the app!',
-              body: 'Hey Team Tripsit, I want to ask...',
-            });
+          onPress={async () => {
+            const isavailable = await MailComposer.isAvailableAsync()
+            if (isavailable) {
+              const options = {
+                subject: 'Contact email from the app!',
+                recipients: ['mobile@tripsit.me'],
+                body: 'Hey Team Tripsit, I want to say...',
+              }
+              try {
+        
+                const result = await MailComposer.composeAsync(options)
+              } catch (error) {
+                alert('Sorry there was an error, make sure you\'re connected to the internet and have an email app.')
+              // console.info(error)
+              }
+            } else {
+              alert('Not supported')
+            }
           }}
         >
         <Text style={styles.text}>Send email</Text>

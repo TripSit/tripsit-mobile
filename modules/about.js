@@ -124,7 +124,7 @@ function AboutScreen() {
           <Text style={styles.text}>{disclaimer}</Text>
           <Text style={styles.aboutHeaderText}>Support TripSit</Text>
           <Text style={styles.text}>{support}</Text>
-          <View style={[styles.row, styles.justifyCenter]}>
+          <View style={[styles.row, styles.justifyCenter]} contentD>
             <TouchableOpacity
               onPress={() => {
                 handleOpenWithWebBrowser('https://www.facebook.com/groups/tripsit/');

@@ -48,25 +48,21 @@ function ComboScreen() {
     // console.log("drug_b is: " + drug_b)
     var comboData = "";
     if (drug_a != "" && drug_b != "") {
-      console.log("both drugs are set!");
+    // console.log("both drugs are set!");
       for (var i = 0; i < Object.keys(allDrugData).length; i++) {
         // TODO - JSON UNDEFINED ISSUE - Same as above
         if (!!allDrugData[i]) {
           // console.debug("allDrugData[i]['name'] is: " + allDrugData[i]['name'])
           if (allDrugData[i]["name"] == drug_a) {
-            console.debug("found drug_a: " + drug_a);
+          // console.debug("found drug_a: " + drug_a);
             drugData = allDrugData[i];
             if (!!allDrugData[i]["interactions"]) {
-              console.debug(
-                `${drug_a} interactions: ${allDrugData[i]["interactions"].length}`
-              );
+            // console.debug(`${drug_a} interactions: ${allDrugData[i]["interactions"].length}`);
               for (var j = 0; j < allDrugData[i]["interactions"].length; j++) {
-                console.debug(
-                  `Interaction ${j} is: ${allDrugData[i]["interactions"][j]["name"]}`
-                );
+              // console.debug(`Interaction ${j} is: ${allDrugData[i]["interactions"][j]["name"]}`);
                 if (allDrugData[i]["interactions"][j]["name"] == drug_b) {
                   const status = allDrugData[i]["interactions"][j]["status"];
-                  console.debug(`Found interaction with ${drug_b}: ${status}`);
+                // console.debug(`Found interaction with ${drug_b}: ${status}`);
                   // Loop through combo_definitions and find the object where "status" is equal to result
                   for (
                     var k = 0;
@@ -74,18 +70,16 @@ function ComboScreen() {
                     k++
                   ) {
                     if (combo_definitions[k]["status"] == status) {
-                      console.debug(
-                        `Found combo_defs: ${combo_definitions[k]["status"]}`
-                      );
+                    // console.debug(`Found combo_defs: ${combo_definitions[k]["status"]}`);
                       const definition = combo_definitions[k]["definition"];
-                      console.debug(`Definition: ${definition}`);
+                    // console.debug(`Definition: ${definition}`);
                       const emoji = combo_definitions[k]["emoji"];
-                      console.debug(`Emoji: ${emoji}`);
+                    // console.debug(`Emoji: ${emoji}`);
                       const color = combo_definitions[k]["color"];
-                      console.debug(`Color: ${color}`);
+                    // console.debug(`Color: ${color}`);
                       const output = `${emoji}  ${status} ${emoji}`;
                       comboData = `${output}\n\n${definition}`;
-                      console.debug(`Output: ${output}`);
+                    // console.debug(`Output: ${output}`);
                       setResults(comboData);
                       setShouldShow(true);
                       break;
