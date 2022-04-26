@@ -25,7 +25,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "me.tripsit.mobile",
-      "versionCode": 3 
+      "versionCode": 5
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
