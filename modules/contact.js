@@ -1,7 +1,7 @@
 import * as React from 'react';
 // React elements to use
 import {
-  Alert, ScrollView, SafeAreaView, TextInput, Image, StyleSheet, Text, View, TouchableOpacity,
+  Alert, ScrollView, SafeAreaView, TextInput, Image, Button, StyleSheet, Text, View, TouchableOpacity,
 } from 'react-native';
 // This controls the bar at the top of the phone that diplays time, battery, etc
 import { StatusBar } from 'expo-status-bar';
@@ -62,30 +62,29 @@ function ContactScreen() {
       <TouchableOpacity>
         <Text style={styles.text}>{discord}</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-      style={styles.searchButton}
+      <Button
         onPress={() => {
           handleOpenWithWebBrowser('https://www.discord.gg/NSDvVeCb7b');
         }}
-      >
-        <Text style={styles.text}>Join Discord!</Text>
-      </TouchableOpacity>
+        title="Join Discord!"
+        color="#841584"
+        accessibilityLabel="Join Discord!"
+      />
       <TouchableOpacity>
         <Text style={styles.text}>{irc}</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.searchButton}
+      <Button
         onPress={() => {
           handleOpenWithWebBrowser('https://chat.tripsit.me/chat/?a=1&nick=AndroidUser&#content');
         }}
-      >
-        <Text style={styles.text}>Connect to IRC!</Text>
-      </TouchableOpacity>
+        title="Connect to IRC!"
+        color="#841584"
+        accessibilityLabel="Connect to IRC!"
+      />
       <TouchableOpacity>
         <Text style={styles.text}>{email}</Text>
       </TouchableOpacity>
-      <TouchableOpacity 
-          style={styles.searchButton}
+      <Button
           onPress={async () => {
             const isavailable = await MailComposer.isAvailableAsync()
             if (isavailable) {
@@ -105,9 +104,10 @@ function ContactScreen() {
               alert('Not supported')
             }
           }}
-        >
-        <Text style={styles.text}>Send email</Text>
-      </TouchableOpacity>
+        title="Send email!"
+        color="#841584"
+        accessibilityLabel="Send email!"
+      />
       {status !== null &&
         <View>
           <Text>{status}</Text>
