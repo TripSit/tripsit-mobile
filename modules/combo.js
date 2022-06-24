@@ -1,11 +1,5 @@
 import * as React from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import * as allDrugData from "../assets/data/drug_db_combined.json";
 import * as combo_definitions from "../assets/data/combo_definitions.json";
 import SearchableDropdown from "react-native-searchable-dropdown";
@@ -69,11 +63,7 @@ function ComboScreen() {
                   const status = allDrugData[i]["interactions"][j]["status"];
                   // console.debug(`Found interaction with ${drug_b}: ${status}`);
                   // Loop through combo_definitions and find the object where "status" is equal to result
-                  for (
-                    var k = 0;
-                    k < Object.keys(combo_definitions).length;
-                    k++
-                  ) {
+                  for (var k = 0; k < Object.keys(combo_definitions).length; k++) {
                     if (combo_definitions[k]["status"] == status) {
                       // console.debug(`Found combo_defs: ${combo_definitions[k]["status"]}`);
                       const definition = combo_definitions[k]["definition"];
@@ -220,9 +210,7 @@ function ComboScreen() {
         <View style={styles.container}>
           {!results.error ? (
             <>
-              <Text style={comboTitleStyle(results.color_code)}>
-                {results.title}
-              </Text>
+              <Text style={comboTitleStyle(results.color_code)}>{results.title}</Text>
               <Text style={styles.comboDefineStyle}>{results.definition}</Text>
             </>
           ) : (
