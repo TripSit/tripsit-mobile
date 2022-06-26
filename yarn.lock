@@ -3776,10 +3776,10 @@ expo-updates-interface@~0.6.0:
   resolved "https://registry.yarnpkg.com/expo-updates-interface/-/expo-updates-interface-0.6.0.tgz#cef5250106e59572afdfcf245c534754c8c844ba"
   integrity sha512-oQcGTsE8mSkSxENPlWjZPGoJpt3RFDNPuO5d8shBDxBb4ZNH/W2ojavSFQMaLbNMoS0bYQQhzbRNEIBd306QMg==
 
-expo-updates@~0.13.1:
-  version "0.13.1"
-  resolved "https://registry.yarnpkg.com/expo-updates/-/expo-updates-0.13.1.tgz#ffed4216eda6afbc15f06399115a5b9e649102a6"
-  integrity sha512-6GTqgAco3da/rk0/AvDRFmrWxEIxlmIs7vvoCWWxyvifLBlQAaU08+AdZH5RwdN3aUaIep70pnqlc67xe/y0og==
+expo-updates@~0.13.2:
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/expo-updates/-/expo-updates-0.13.2.tgz#c96d664d8a97eb3af6841e46a137962b8bf06361"
+  integrity sha512-2ZthmyxYuN/c71y2oLNz9fdVXLf7ggxAw3Tfy+kwtGOTKNyOf/YoG+SwX7a0v+jZTJnuorEj5FuNf3wrniQ7+w==
   dependencies:
     "@expo/code-signing-certificates" "0.0.1"
     "@expo/config" "^6.0.14"
@@ -3794,10 +3794,10 @@ expo-updates@~0.13.1:
     resolve-from "^5.0.0"
     uuid "^3.4.0"
 
-expo-web-browser@~10.2.0:
-  version "10.2.0"
-  resolved "https://registry.yarnpkg.com/expo-web-browser/-/expo-web-browser-10.2.0.tgz#e37450e5a0dd2eb1cf5ea5511589ed207da8aafe"
-  integrity sha512-Y8LCiktTUdPQVgO5BR6uHFU8FGu/8ysT2ynpO0WFeD4odX8JBX5JwQ9HokEa3XvRJNpefgQmXETDjzkMznXMvQ==
+expo-web-browser@~10.2.1:
+  version "10.2.1"
+  resolved "https://registry.yarnpkg.com/expo-web-browser/-/expo-web-browser-10.2.1.tgz#4bd9214f7aefcd1af6ea26ae068a0e3e25a1e0bd"
+  integrity sha512-om34EL7OX5ouBM/hq2PrjHDLKmjVhAy+1H7YqRY6nS8dWsewnLFdLq4d8GPwWQBYb6kHKYVzwFRj+WLTfpAOBQ==
   dependencies:
     compare-urls "^2.0.0"
 
@@ -6667,12 +6667,13 @@ react-shallow-renderer@16.14.1:
     object-assign "^4.1.1"
     react-is "^16.12.0 || ^17.0.0"
 
-react@18.0.0:
-  version "18.0.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-18.0.0.tgz#b468736d1f4a5891f38585ba8e8fb29f91c3cb96"
-  integrity sha512-x+VL6wbT4JRVPm7EGxXhZ8w8LTROaxPXOqhlGyVSrv0sB1jkyFGgXxJ8LVoPRLvPR6/CIZGFmfzqUa2NYeMr2A==
+react@17.0.2:
+  version "17.0.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
+  integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==
   dependencies:
     loose-envify "^1.1.0"
+    object-assign "^4.1.1"
 
 readable-stream@^3.4.0:
   version "3.6.0"
